@@ -3,6 +3,10 @@ local lsp = require('lsp-zero')
 lsp.preset('recommended')
 
 lsp.ensure_installed({
+    'clangd',
+    'dockerls',
+    'docker_compose_language_service',
+    'texlab',
 	'tsserver',
 	'eslint',
 	'rust_analyzer',
