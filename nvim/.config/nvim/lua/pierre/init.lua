@@ -29,7 +29,6 @@ autocmd({"BufWritePre"}, {
 autocmd("FileType", {
     pattern = "yaml",
     callback = function()
-        print("yaml detected")
         vim.opt_local.tabstop = 4
         vim.opt_local.softtabstop = 4
         vim.opt_local.shiftwidth = 4
