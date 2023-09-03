@@ -62,98 +62,19 @@ require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 -- pylsp better linting
 require('lspconfig').pylsp.setup({
     settings = {
-        --debug = true,
-        --args = {'-v', '-v'},
-        --pylsp = {
-        --    configurationSources = { 'flake8' },
-        --    plugins = {
-        --        jedi_completion = { enabled = true },
-        --        jedi_hover = { enabled = true },
-        --        jedi_references = { enabled = true },
-        --        jedi_signature_help = { enabled = true },
-        --        jedi_symbols = { enabled = true, all_scopes = true },
-        --        pycodestyle = { enabled = false },
-        --        flake8 = {
-        --            enabled = true,
-        --            maxLineLength = 160
-        --        },
-        --        mypy = { enabled = false },
-        --        isort = { enabled = false },
-        --        yapf = { enabled = false },
-        --        pylint = { enabled = false },
-        --        pydocstyle = { enabled = false },
-        --        mccabe = { enabled = false },
-        --        preload = { enabled = false },
-        --        rope_completion = { enabled = false }
-        --    }
-        --},
         pylsp = {
             configurationSources = { 'flake8' },
             plugins = {
-                --autopep8 = { enabled = true },
-                flake8 = {
-                    --config = nil,
-                    enabled = true,
-                    --exclude  = {},
-                    --executable = 'flake8',
-                    --filename = nil,
-                    --hangClosing = nil,
-                    --ignore = {},
-                    --maxComplexity = nil,
-                    maxLineLength = 160,
-                    --indentSize = nil,
-                    --perFileIgnores = {},
-                    --select = nil
-                },
-                --jedi = {
-                --    auto_import_modules = { 'numpy' },
-                --    extra_paths = {},
-                --    env_vars = nil,
-                --    environment = nil
-                --},
-                --jedi_completion = {
-                --    enabled = true,
-                --    include_params = true,
-                --    include_class_objects = false,
-                --    include_function_objects = false,
-                --    fuzzy = false,
-                --    eager = false,
-                --    resolve_at_most = 25,
-                --    cache_for = { 'pandas', 'numpy', 'tensorflow', 'matplotlib' }
-                --},
-                --jedi_hover = { enabled = true },
-                --jedi_references = { enabled = true },
-                --jedi_signature_help = { enabled = true },
-                --jedi_symbols = { all_scopes = true, include_import_symbols = true },
-                --mccabe = { enabled = true, threshold = 15 },
-                --preload = { enabled = true, modules = {} },
-                --pycodestyle = {
-                --    enabled = true,
-                --    exclude = {},
-                --    filename = {},
-                --    select = nil,
-                --    ignore = {},
-                --    hangClosing = nil,
-                --    maxLineLength = nil,
-                --    indentSize = nil
-                --},
-                --pydocstyle = {
-                --    enabled = false,
-                --    convention = nil,
-                --    addIgnore = {},
-                --    addSelect = {},
-                --    ignore = {},
-                --    select = nil,
-                --    match = '(?!test_).*\\.py',
-                --    matchDir = '{^\\.}.*'
-                --},
-                --pyflakes = { enabled = true },
-                --pylint = { enabled = false, args = {}, executable = nil },
-                --pylint = { enabled = true },
-                --rope_autoimport = { enabled = false, memory = false },
-                --rope_completion = { enabled = false, eager = false },
-                --yapf = { enabled = true }
+                jedi_completion = { enabled = true },
+                jedi_hover = { enabled = true },
+                jedi_references = { enabled = true },
+                jedi_signature_help = { enabled = true },
+                jedi_symbols = { enabled = true, all_scopes = true },
                 pycodestyle = { enabled = false },
+                flake8 = {
+                    enabled = true,
+                    maxLineLength = 160
+                },
                 mypy = { enabled = false },
                 isort = { enabled = false },
                 yapf = { enabled = false },
@@ -162,8 +83,75 @@ require('lspconfig').pylsp.setup({
                 mccabe = { enabled = false },
                 preload = { enabled = false },
                 rope_completion = { enabled = false }
+            }
+        },
+        pylspa  = {
+            configurationSources  = { 'pycodestyle' },
+            plugins  = {
+                autopep8  = { enabled = true },
+                flake8  = {
+                    config  =nil,
+                    enabled  = false,
+                    exclude   = {},
+                    executable  = 'flake8',
+                    filename  = nil,
+                    hangClosing  = nil,
+                    ignore  = {},
+                    maxComplexity  = nil,
+                    maxLineLength  = nil,
+                    indentSize  = nil,
+                    perFileIgnores  = {},
+                    select  = nil
+                },
+                jedi  = {
+                    auto_import_modules  = { 'numpy' },
+                    extra_paths  = {},
+                    env_vars  = nil,
+                    environment  = nil
+                },
+                jedi_completion  = {
+                    enabled  = true,
+                    include_params  = true,
+                    include_class_objects  = false,
+                    include_function_objects  = false,
+                    fuzzy  = false,
+                    eager  = false,
+                    resolve_at_most  = 25,
+                    cache_for  = { 'pandas', 'numpy', 'tensorflow', 'matplotlib' }
+                },
+                jedi_hover  = { enabled = true },
+                jedi_references  = { enabled = true },
+                jedi_signature_help  = { enabled = true },
+                jedi_symbols  = { all_scopes = true, include_import_symbols = true },
+                mccabe  = { enabled = true, threshold = 15 },
+                preload  = { enabled = true, modules = {} },
+                pycodestyle  = {
+                    enabled  = true,
+                    exclude  = {},
+                    filename  = {},
+                    select  = nil,
+                    ignore  = {},
+                    hangClosing  = nil,
+                    maxLineLength  = nil,
+                    indentSize  = nil
+                },
+                pydocstyle  = {
+                    enabled  = false,
+                    convention  = nil,
+                    addIgnore  = {},
+                    addSelect  = {},
+                    ignore  = {},
+                    select  = nil,
+                    match  = '(?!test_).*\\.py',
+                    matchDir  = '{^\\.}.*'
+                },
+                pyflakes  = { enabled = true },
+                pylint  = { enabled = false, args = {}, executable = nil },
+                rope_autoimport  = { enabled = false, memory = false },
+                rope_completion  = { enabled = false, eager = false },
+                yapf  = { enabled = true }
             },
-            --rope = { extensionModules = nil, ropeFolder = nil }
+            rope  = { extensionModules = nil, ropeFolder = nil }
         }
     }
 })
