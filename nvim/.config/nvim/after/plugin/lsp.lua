@@ -58,6 +58,25 @@ end)
 
 require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
+require('lspconfig').pylsp.setup {
+    settings = {
+        pylsp = {
+            plugins = {
+                ruff = {
+                    enabled = true,
+                    extendSelect = { "I" },
+                    --lineLength = 160
+                },
+                --mypy = {
+                --    enabled = false,
+                --    live_mode = true,
+                --    strict = true
+                --}
+            }
+        }
+    }
+}
+
 lsp.setup()
 
 vim.diagnostic.config({
