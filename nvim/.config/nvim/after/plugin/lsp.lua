@@ -19,6 +19,7 @@ local lspkind = require('lspkind')
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
+
 cmp.setup({
     snippet = {
         -- REQUIRED - you must specify a snippet engine
@@ -50,12 +51,15 @@ cmp.setup({
     },
 
     sources = cmp.config.sources({
+        { name = 'calc' },
+        { name = 'nvim_lua' },
         { name = 'nvim_lsp' },
         -- { name = 'vsnip' }, -- For vsnip users.
         { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
         -- { name = 'snippy' }, -- For snippy users.
     }, {
+        { name = 'path' },
         { name = 'buffer' },
     }),
 
@@ -74,17 +78,14 @@ cmp.setup({
     },
 
     experimental = {
-        -- I like the new menu better! Nice work hrsh7th
-        native_menu = false,
-
         -- Let's play with this for a day or two
-        ghost_text = false,
+        ghost_text = true,
     },
 })
 
 
 -- `/` cmdline setup.
-cmp.setup.cmdline('/', {
+cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
     sources = {
         { name = 'buffer' }
@@ -110,6 +111,7 @@ cmp.setup.cmdline(':', {
 --lsp.setup_nvim_cmp({
 --    mapping = cmp_mappings
 --})
+
 
 lsp.set_preferences({
     suggest_lsp_servers = false,
