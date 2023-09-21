@@ -3,7 +3,6 @@ local lspkind = require('lspkind')
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
-
 cmp.setup({
     snippet = {
         -- REQUIRED - you must specify a snippet engine
