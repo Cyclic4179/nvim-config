@@ -31,7 +31,9 @@ lspconfig.pylsp.setup {
     }
 }
 
-lspconfig.pyright.setup { capabilities = capabilities }
+lspconfig.ocamllsp.setup {}
+
+--lspconfig.pyright.setup { capabilities = capabilities }
 lspconfig.tsserver.setup { capabilities = capabilities }
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
@@ -47,7 +49,7 @@ lspconfig.nil_ls.setup {
 lspconfig.clangd.setup { capabilities = capabilities }
 lspconfig.dockerls.setup { capabilities = capabilities }
 lspconfig.texlab.setup { capabilities = capabilities }
-lspconfig.pylsp.setup { capabilities = capabilities }
+--lspconfig.pylsp.setup { capabilities = capabilities }
 lspconfig.lua_ls.setup {
     capabilities = capabilities,
     settings = {
