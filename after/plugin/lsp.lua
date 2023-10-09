@@ -34,6 +34,7 @@ lspconfig.pylsp.setup {
 lspconfig.ocamllsp.setup {}
 
 --lspconfig.pyright.setup { capabilities = capabilities }
+lspconfig.java_language_server.setup{}
 lspconfig.tsserver.setup { capabilities = capabilities }
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
