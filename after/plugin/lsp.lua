@@ -38,10 +38,10 @@ lspconfig.ocamllsp.setup {}
 --    capabilities = capabilities,
 --    cmd =
 --}
-lspconfig.java_language_server.setup {
-    capabilities = capabilities,
-    cmd = { 'java-language-server' }
-}
+--lspconfig.java_language_server.setup {
+--    capabilities = capabilities,
+--    cmd = { 'java-language-server' }
+--}
 lspconfig.tsserver.setup { capabilities = capabilities }
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
