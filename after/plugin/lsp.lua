@@ -34,10 +34,10 @@ lspconfig.pylsp.setup {
 lspconfig.ocamllsp.setup {}
 
 --lspconfig.pyright.setup { capabilities = capabilities }
---lspconfig.jdtls.setup {
---    capabilities = capabilities,
---    cmd =
---}
+lspconfig.jdtls.setup {
+    capabilities = capabilities,
+    cmd = { "jdt-language-server", "-configuration", "/home/user/.cache/jdtls/config", "-data", "/home/user/.cache/jdtls/workspace" }
+}
 --lspconfig.java_language_server.setup {
 --    capabilities = capabilities,
 --    cmd = { 'java-language-server' }
