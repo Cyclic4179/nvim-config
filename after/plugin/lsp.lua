@@ -3,6 +3,7 @@ local lspconfig = require('lspconfig')
 
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local home = vim.fn.getenv('HOME')
 
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 --require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
@@ -36,7 +37,10 @@ lspconfig.ocamllsp.setup {}
 --lspconfig.pyright.setup { capabilities = capabilities }
 lspconfig.jdtls.setup {
     capabilities = capabilities,
-    cmd = { "jdt-language-server", "-configuration", "/home/user/.cache/jdtls/config", "-data", "/home/user/.cache/jdtls/workspace" }
+    cmd = { "jdt-language-server", "-data", home .. "/.cache/jdtls/workspace" },
+    root_dir = function(fname)
+        return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", ".git")(fname) or vim.fn.getcwd()
+    end,
 }
 --lspconfig.java_language_server.setup {
 --    capabilities = capabilities,
