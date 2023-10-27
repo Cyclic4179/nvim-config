@@ -26,6 +26,10 @@ cmp.setup({
             select = true,
             behavior = cmp.ConfirmBehavior.Insert
         }),
+        ['<C-r>'] = cmp.mapping.confirm({
+            select = true;
+            behavior = cmp.ConfirmBehavior.Replace
+        }),
         ['<C-Space>'] = cmp.mapping.complete(),
 
         -- not use tab
