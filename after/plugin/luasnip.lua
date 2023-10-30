@@ -21,8 +21,39 @@ ls.add_snippets(nil, {
         }, {
             func(date, {}),
         }),
+        snip({
+            trig = "meta",
+            namr = "Metadata",
+            dscr = "Yaml metadata format for markdown"
+        },
+        {
+            text({"---",
+            "title: "}), insert(1, "note_title"), text({"",
+            "author: "}), insert(2, "author"), text({"",
+            "date: "}), func(date, {}), text({"",
+            "categories: ["}), insert(3, ""), text({"]",
+            "lastmod: "}), func(date, {}), text({"",
+            "tags: ["}), insert(4), text({"]",
+            "comments: true",
+            "---", ""}),
+            insert(0)
+        })
     },
+    java = {
+        snip({
+            trig = "main",
+            namr = "Main",
+            dsrc = "Static Main Method",
+        }, {
+            text({"public static void main(String[] args) {", "    "}),
+            insert(1, "statements"),
+            text({"", "}"}),
+        })
+    }
 })
+
+
+
 
 
 local keymap = vim.api.nvim_set_keymap
