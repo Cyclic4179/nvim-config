@@ -47,7 +47,6 @@ local config = {
 
     on_attach = on_attach,
 
-    -- 💀
     -- This is the default if not provided, you can remove it. Or adjust as needed.
     -- One dedicated LSP server & client will be started per unique root_dir
     --root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
@@ -70,7 +69,17 @@ local config = {
                 },
                 useBlocks = true,
             },
+            format = {
+                settings = {
+                    -- Use Google Java style guidelines for formatting
+                    -- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
+                    -- and place it in the ~/.local/share/eclipse directory
+                    url = "/.local/share/eclipse/eclipse-java-google-style.xml",
+                    profile = "GoogleStyle",
+                },
+            },
             signatureHelp = { enabled = true },
+            contentProvider = { preferred = 'fernflower' }, -- Use fernflower to decompile library code
             configuration = {
                 runtimes = {
                     {
