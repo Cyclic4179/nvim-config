@@ -42,17 +42,13 @@ cmp.setup({
         { name = 'nvim_lua' },
         { name = 'nvim_lsp' },
         { name = 'nvim_lsp_signature_help' },
-        -- { name = 'vsnip' }, -- For vsnip users.
-        { name = 'luasnip' }, -- For luasnip users.
-        -- { name = 'ultisnips' }, -- For ultisnips users.
-        -- { name = 'snippy' }, -- For snippy users.
+        { name = 'luasnip' },
     }, {
         { name = 'path' },
-        { name = 'buffer' },
+        { name = 'buffer', keyword_length = 5 },
     }),
 
     formatting = {
-        -- Youtube: How to set up nice formatting for your sources.
         format = lspkind.cmp_format {
             with_text = true,
             menu = {
@@ -61,6 +57,7 @@ cmp.setup({
                 nvim_lua = "[api]",
                 path = "[path]",
                 luasnip = "[snip]",
+                calc = "[calc]",
             },
         },
     },
@@ -76,7 +73,7 @@ cmp.setup({
 cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
     sources = {
-        { name = 'buffer' }
+        { name = 'buffer', keyword_length = 3 }
     }
 })
 
@@ -84,7 +81,7 @@ cmp.setup.cmdline({ '/', '?' }, {
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({
-        { name = 'path' }
+        { name = 'path', keyword_length = 3 }
     }, {
         {
             name = 'cmdline',
