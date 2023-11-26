@@ -27,7 +27,7 @@ cmp.setup({
             behavior = cmp.ConfirmBehavior.Insert
         }),
         ['<C-r>'] = cmp.mapping.confirm({
-            select = true;
+            select = true,
             behavior = cmp.ConfirmBehavior.Replace
         }),
         ['<C-Space>'] = cmp.mapping.complete(),
@@ -41,6 +41,7 @@ cmp.setup({
         { name = 'calc' },
         { name = 'nvim_lua' },
         { name = 'nvim_lsp' },
+        { name = 'nvim_lsp_signature_help' },
         -- { name = 'vsnip' }, -- For vsnip users.
         { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
@@ -93,5 +94,3 @@ cmp.setup.cmdline(':', {
         }
     })
 })
-
-
