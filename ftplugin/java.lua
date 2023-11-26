@@ -6,6 +6,7 @@ local jdtls = require('jdtls')
 -- The on_attach function is used to set key maps after the language server
 -- attaches to the current buffer
 local on_attach = function(client, bufnr)
+    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
     -- buffer mappings (not just for java), also present in ./lsp.lua
     local opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -30,15 +31,21 @@ local on_attach = function(client, bufnr)
     end, opts)
 
     -- Java extensions provided by jdtls
-    vim.keymap.set('n', '<C-o>', jdtls.organize_imports, opts)
+    --vim.keymap.set('n', '<C-o>', jdtls.organize_imports, opts)
     vim.keymap.set('n', '<leader>ev', jdtls.extract_variable, opts)
     vim.keymap.set('n', '<leader>ec', jdtls.extract_constant, opts)
     vim.keymap.set('v', '<leader>em', jdtls.extract_method, opts)
 end
 
+
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 local config = {
+    -- Set up lspconfig.
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+
     cmd = { "jdt-language-server", "-data", home .. "/.cache/jdtls/workspace" },
+
+    on_attach = on_attach,
 
     -- 💀
     -- This is the default if not provided, you can remove it. Or adjust as needed.
@@ -63,6 +70,7 @@ local config = {
                 },
                 useBlocks = true,
             },
+            signatureHelp = { enabled = true },
             configuration = {
                 runtimes = {
                     {
