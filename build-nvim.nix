@@ -1,52 +1,47 @@
 { pkgs }:
-pkgs.neovimBuilder {
+let
+  extraPackages = with pkgs; [
+    # search
+    ripgrep
+    fd # suggested by telescope-nvim heathcheck
 
-  # packages needed
-  extraMakeWrapperArgs =
-    let
-      extraPackages = with pkgs; [
-        # search
-        ripgrep
-        fd # suggested by telescope-nvim heathcheck
+    # unzip
+    unzip
 
-        # unzip
-        unzip
+    # lsp
+    # nix
+    nil
 
-        # lsp
-        # nix
-        nil
+    rust-analyzer
 
-        rust-analyzer
+    nodePackages_latest.dockerfile-language-server-nodejs
+    #nodePackages.eslint
+    nodePackages.typescript-language-server
+    lua-language-server
 
-        nodePackages_latest.dockerfile-language-server-nodejs
-        #nodePackages.eslint
-        nodePackages.typescript-language-server
-        lua-language-server
+    nodePackages.pyright
 
-        nodePackages.pyright
+    python311Packages.python-lsp-server
+    python311Packages.python-lsp-ruff
 
-        python311Packages.python-lsp-server
-        python311Packages.python-lsp-ruff
+    clang-tools
+    #libclang
+    #llvmPackages.clang-unwrapped
+    #clang
+    #llvmPackages.libcxxClang
+    ##llvmPackages.libcClang
+    #llvmPackages.libllvm
 
-        clang-tools
-        #libclang
-        #llvmPackages.clang-unwrapped
-        #clang
-        #llvmPackages.libcxxClang
-        ##llvmPackages.libcClang
-        #llvmPackages.libllvm
+    texlab
 
-        texlab
+    # ocaml
+    ocamlPackages.ocaml-lsp
+    ocamlPackages.ocamlformat
 
-        # ocaml
-        ocamlPackages.ocaml-lsp
-        ocamlPackages.ocamlformat
+    #java-language-server
+    jdt-language-server
+  ];
 
-        #java-language-server
-        jdt-language-server
-      ];
-    in
-    ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
 
   plugins = with pkgs.vimPlugins; [
     # theme
@@ -89,7 +84,7 @@ pkgs.neovimBuilder {
     lspkind-nvim
 
     # nix file detection
-    vim-nix
+    #vim-nix # i dont use this
 
     # personal config
     {
@@ -97,4 +92,10 @@ pkgs.neovimBuilder {
       outPath = "${./config}";
     }
   ];
+in
+pkgs.neovimBuilder {
+  inherit plugins;
+
+  # packages needed
+  extraMakeWrapperArgs = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
 }

@@ -1,1 +1,1 @@
-require("pierre")
+plugin/init.lua
