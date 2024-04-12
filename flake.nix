@@ -12,6 +12,11 @@
       flake-utils,
       nix2vim,
     }:
+    {
+      overlays.default = final: prev: {
+        neovim = self.packages.${final.system}.neovim;
+      };
+    } //
     flake-utils.lib.eachDefaultSystem (
       system:
       let
@@ -21,23 +26,10 @@
         };
       in
       {
-        #packages.default = pkgs.nix2vimDemo;
-        #apps = import ./apps.nix { inherit pkgs; utils = flake-utils.lib; };
-        #checks = import ./checks { inherit pkgs dsl; check-utils = import ./check-utils.nix; };
-
-        #hmModules.nvim = import ./nvim-config.nix;
-
         packages = rec {
-          nvim = import ./build-nvim.nix {inherit pkgs;};
-          default = nvim;
+          neovim = import ./build-nvim.nix { inherit pkgs; };
+          default = neovim;
         };
-
-        #packages.default = pkgs.hello; # pkgs.neovimBuilder { };
-        #  (x: builtins.trace "testing" nixpkgs.legacyPackages.x86_64-linux.hello)
-        #    3;
       }
-    )
-    // {
-      #packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-    };
+    );
 }
