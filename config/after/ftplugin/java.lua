@@ -1,4 +1,5 @@
 local home = vim.fn.getenv('HOME')
+local eclipseJavaGoogleStyle = vim.fn.getenv('ECLIPSE_JAVA_GOOGLE_STYLE')
 local java17path = vim.fn.getenv('JAVA_SE_17')
 local jdtls = require('jdtls')
 
@@ -74,7 +75,8 @@ local config = {
                     -- Use Google Java style guidelines for formatting
                     -- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
                     -- and place it in the ~/.local/share/eclipse directory
-                    url = "/.local/share/eclipse/eclipse-java-google-style.xml",
+                    --url = "/.local/share/eclipse/eclipse-java-google-style.xml",
+                    url = eclipseJavaGoogleStyle,
                     profile = "GoogleStyle",
                 },
             },

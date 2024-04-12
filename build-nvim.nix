@@ -42,7 +42,6 @@ let
     jdt-language-server
   ];
 
-
   plugins = with pkgs.vimPlugins; [
     # theme
     rose-pine
@@ -92,10 +91,23 @@ let
       outPath = "${./config}";
     }
   ];
+
+  extraEnvVars = {
+    JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
+    ECLIPSE_JAVA_GOOGLE_STYLE = pkgs.fetchurl {
+      url = "https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml";
+      hash = "sha256-mCgDIoRLQWQUOwHOQwuzc2BngvtMpvFmdESuKyHPvGE=";
+    };
+  };
+
+  extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
+  extraMakeWrapperArgsEnvVars = builtins.concatStringsSep " " (
+    pkgs.lib.mapAttrsToList (name: value: ''--set ${name} ${value}'') extraEnvVars
+  );
 in
 pkgs.neovimBuilder {
   inherit plugins;
 
   # packages needed
-  extraMakeWrapperArgs = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
+  extraMakeWrapperArgs = extraMakeWrapperArgsPath + " " + extraMakeWrapperArgsEnvVars;
 }
