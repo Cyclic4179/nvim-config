@@ -12,10 +12,6 @@
       flake-utils,
       nix2vim,
     }:
-    #{
-    #  packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-    #};
-
     flake-utils.lib.eachDefaultSystem (
       system:
       let
@@ -31,12 +27,17 @@
 
         #hmModules.nvim = import ./nvim-config.nix;
 
-        packages.default = pkgs.hello; # pkgs.neovimBuilder { };
+        packages = rec {
+          nvim = import ./build-nvim.nix {inherit pkgs;};
+          default = nvim;
+        };
+
+        #packages.default = pkgs.hello; # pkgs.neovimBuilder { };
         #  (x: builtins.trace "testing" nixpkgs.legacyPackages.x86_64-linux.hello)
         #    3;
       }
     )
     // {
-      packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+      #packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
     };
 }
