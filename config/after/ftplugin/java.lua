@@ -39,19 +39,28 @@ local on_attach = function(client, bufnr)
 end
 
 
+-- If you started neovim within `~/dev/xy/project-1` this would resolve to `project-1`
+local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+
+local workspace_dir = home .. "/.cache/jdtls/workspace/" .. project_name
+
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 local config = {
     -- Set up lspconfig.
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
 
-    cmd = { "jdtls", "-data", home .. "/.cache/jdtls/workspace" },
+    cmd = {
+        "jdtls",
+        "-data",
+        workspace_dir
+    },
 
     on_attach = on_attach,
 
     -- This is the default if not provided, you can remove it. Or adjust as needed.
     -- One dedicated LSP server & client will be started per unique root_dir
     --root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-    --root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+    root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
     --root_dir = function(fname)
     --    return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", ".git")(fname) or vim.fn.getcwd()
     --end,
