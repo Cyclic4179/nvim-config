@@ -44,7 +44,7 @@ local config = {
     -- Set up lspconfig.
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
 
-    cmd = { "jdt-language-server", "-data", home .. "/.cache/jdtls/workspace" },
+    cmd = { "jdtls", "-data", home .. "/.cache/jdtls/workspace" },
 
     on_attach = on_attach,
 
