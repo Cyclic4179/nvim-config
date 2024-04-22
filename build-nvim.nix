@@ -62,7 +62,7 @@ let
     vim-fugitive
 
     # harpoon
-    harpoon
+    harpoon2
 
     # completion
     nvim-cmp
