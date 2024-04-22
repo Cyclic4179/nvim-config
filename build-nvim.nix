@@ -45,6 +45,7 @@ let
   plugins = with pkgs.vimPlugins; [
     # theme
     rose-pine
+    tokyonight-nvim
 
     telescope-nvim
 
