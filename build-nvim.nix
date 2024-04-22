@@ -40,6 +40,11 @@ let
 
     #java-language-server
     jdt-language-server
+
+    # isabelle
+    isabelle-emacs
+    # before usabel u need to do this:
+    # https://github.com/m-fleury/isabelle-emacs/blob/Isabelle2023-vsce/src/Tools/emacs-lsp/spacemacs_layers/isabelle/README.org
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -64,6 +69,10 @@ let
 
     # harpoon
     harpoon2
+
+    # isabelle
+    isabelle-syn
+    isabelle-lsp
 
     # completion
     nvim-cmp
@@ -93,13 +102,18 @@ let
     }
   ];
 
-  extraEnvVars = {
-    JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
-    ECLIPSE_JAVA_GOOGLE_STYLE = pkgs.fetchurl {
-      url = "https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml";
-      hash = "sha256-mCgDIoRLQWQUOwHOQwuzc2BngvtMpvFmdESuKyHPvGE=";
+  extraEnvVars =
+    let
+      JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
+    in
+    {
+      inherit JAVA_SE_17;
+      JAVA_HOME = JAVA_SE_17;
+      ECLIPSE_JAVA_GOOGLE_STYLE = pkgs.fetchurl {
+        url = "https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml";
+        hash = "sha256-mCgDIoRLQWQUOwHOQwuzc2BngvtMpvFmdESuKyHPvGE=";
+      };
     };
-  };
 
   extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
   extraMakeWrapperArgsEnvVars = builtins.concatStringsSep " " (
