@@ -5,6 +5,8 @@
   inputs.nix2vim.inputs.nixpkgs.follows = "nixpkgs";
   inputs.nix2vim.inputs.flake-utils.follows = "flake-utils";
 
+  inputs.nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+
   outputs =
     {
       self,
