@@ -90,6 +90,20 @@ lspconfig.lua_ls.setup {
         },
     },
 }
+lspconfig.gopls.setup{
+    -- for postfix snippets and analyzers
+    capabilities = capabilities,
+    settings = {
+        gopls = {
+            experimentalPostfixCompletions = true,
+            analyses = {
+                unusedparams = true,
+                shadow = true,
+            },
+            staticcheck = true,
+        },
+    },
+}
 
 
 -- Global mappings.

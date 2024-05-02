@@ -24,6 +24,7 @@ let
     python311Packages.python-lsp-server
     python311Packages.python-lsp-ruff
 
+    # c
     clang-tools
     #libclang
     #llvmPackages.clang-unwrapped
@@ -31,6 +32,8 @@ let
     #llvmPackages.libcxxClang
     ##llvmPackages.libcClang
     #llvmPackages.libllvm
+    gdb
+
 
     texlab
 
@@ -40,6 +43,11 @@ let
 
     #java-language-server
     jdt-language-server
+
+    # go
+    go
+    delve
+    gopls
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -82,6 +90,12 @@ let
     cmp_luasnip
     # formatting
     lspkind-nvim
+
+    # debugger
+    nvim-dap-ui nvim-dap
+    nvim-nio # required for some reason
+    nvim-dap-virtual-text
+    nvim-dap-go
 
     # nix file detection
     #vim-nix # i dont use this
