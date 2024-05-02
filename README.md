@@ -14,6 +14,7 @@ nix profile install github:Cyclic4179/nvim-config
 maybe use debugger in java, python, ocaml?
 - [ocaml](https://github.com/hackwaly/ocamlearlybird)
 - [java](https://github.com/mfussenegger/nvim-jdtls)
+- [java](https://sookocheff.com/post/vim/neovim-java-ide/#debugging--nvim-dap)
 
 
 # old config without flakes (archived)
