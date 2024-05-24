@@ -15,21 +15,24 @@
       nix2vim,
     }:
     {
-      overlays.default = final: prev: {
-        neovim = self.packages.${final.system}.neovim;
-      };
-    } //
-    flake-utils.lib.eachDefaultSystem (
+      overlays.default = final: prev: { neovim = self.packages.${final.system}.neovim; };
+    }
+    // flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ nix2vim.overlay ];
         };
+        neovim = import ./build-nvim.nix { inherit pkgs; };
       in
       {
-        packages = rec {
-          neovim = import ./build-nvim.nix { inherit pkgs; };
+        apps.default = flake-utils.lib.mkApp {
+          drv = neovim;
+          name = "nvim";
+        };
+        packages = {
+          neovim = neovim;
           default = neovim;
         };
       }

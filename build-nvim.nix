@@ -43,7 +43,6 @@ let
     #llvmPackages.libllvm
     gdb
 
-
     texlab
 
     # ocaml
@@ -79,6 +78,10 @@ let
     # tpope/vim-fugitive
     vim-fugitive
 
+    #vim-visual-multi # idk if i want this
+    #multicursors-nvim
+    #multiple-cursors
+
     # harpoon
     harpoon2
 
@@ -101,7 +104,8 @@ let
     lspkind-nvim
 
     # debugger
-    nvim-dap-ui nvim-dap
+    nvim-dap-ui
+    nvim-dap
     nvim-nio # required for some reason
     nvim-dap-virtual-text
     nvim-dap-go
