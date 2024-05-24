@@ -21,8 +21,17 @@ let
 
     nodePackages.pyright
 
-    python311Packages.python-lsp-server
-    python311Packages.python-lsp-ruff
+    (python3.withPackages (
+      ps:
+      with ps;
+      [
+        python-lsp-server
+        python-lsp-black.override { pytestCheckHook = null; } # didnt build with tests enabled :shrug:
+        pyls-isort
+        pylsp-mypy
+      ]
+      ++ python-lsp-server.optional-dependencies.all
+    ))
 
     # c
     clang-tools

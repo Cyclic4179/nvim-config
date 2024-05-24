@@ -11,25 +11,68 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 --require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
+-- resolved by settings PYTHONPATH (https://jdhao.github.io/2023/07/22/neovim-pylsp-setup)
+--local venv_path = os.getenv('VIRTUAL_ENV')
+--local py_path = nil
+---- decide which python executable to use for mypy
+--if venv_path ~= nil then
+--    py_path = venv_path .. "/bin/python3"
+--else
+--    py_path = vim.g.python3_host_prog
+--end
+
 lspconfig.pylsp.setup {
-    capabilities = capabilities,
     settings = {
         pylsp = {
             plugins = {
-                ruff = {
+                -- formatter options
+                black = { enabled = true },
+                autopep8 = { enabled = false },
+                yapf = { enabled = false },
+                -- linter options
+                pylint = { enabled = true, executable = "pylint" },
+                ruff = { enabled = false },
+                pyflakes = { enabled = false },
+                pycodestyle = { enabled = false },
+                -- type checker
+                pylsp_mypy = {
                     enabled = true,
-                    extendSelect = { "I" },
-                    --lineLength = 160
+                    --overrides = { "--python-executable", py_path, true },
+                    report_progress = true,
+                    live_mode = false
                 },
-                --mypy = {
-                --    enabled = false,
-                --    live_mode = true,
-                --    strict = true
-                --}
-            }
-        }
-    }
+                -- auto-completion options
+                jedi_completion = { fuzzy = true },
+                -- import sorting
+                isort = { enabled = true },
+            },
+        },
+    },
+    flags = {
+        debounce_text_changes = 200,
+    },
+    capabilities = capabilities,
 }
+
+--lspconfig.pylsp.setup {
+--    capabilities = capabilities,
+--    settings = {
+--        pylsp = {
+--            plugins = {
+--                --ruff = {
+--                --    enabled = true,
+--                --    extendSelect = { "I" },
+--                --    --lineLength = 160
+--                --},
+--                --mypy = {
+--                --    enabled = false,
+--                --    live_mode = true,
+--                --    strict = true
+--                --}
+--            }
+--        }
+--    }
+--}
 
 lspconfig.ocamllsp.setup {}
 
