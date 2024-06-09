@@ -48,6 +48,7 @@ let
     # ocaml
     ocamlPackages.ocaml-lsp
     ocamlPackages.ocamlformat
+    dune_3 # otherwise sometimes the lsp wont work
 
     #java-language-server
     jdt-language-server
