@@ -19,7 +19,7 @@ let
     nodePackages.typescript-language-server
     lua-language-server
 
-    nodePackages.pyright
+    pyright
 
     (python3.withPackages (
       ps:
