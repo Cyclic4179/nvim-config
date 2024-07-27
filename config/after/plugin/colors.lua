@@ -1,8 +1,27 @@
 -- set theme
-require('rose-pine').setup({
-    --disable_italics = true
+--require('rose-pine').setup({
+--    --disable_italics = true
+--})
+--vim.cmd('colorscheme rose-pine')
+require("rose-pine").setup({
+    styles = { transparency = true },
+    --highlight_groups = {
+    --    TelescopeBorder = { bg = "none" },
+    --    TelescopeNormal = { bg = "none" },
+    --    TelescopePromptNormal = { bg = "base" },
+    --    TelescopeResultsNormal = { bg = "none" },
+    --    TelescopeSelection = { bg = "base" },
+    --    TelescopeSelectionCaret = { bg = "rose" },
+
+    --    -- transparent background
+    --    NormalNC = { bg = "none" },
+    --    Normal = { bg = "none" },
+    --    NormalFloat = { bg = "none" },
+
+    --    --HarpoonBorder = { bg = "none" },
+    --    HarpoonBorder = { bg = "none" },
+    --},
 })
-vim.cmd('colorscheme rose-pine')
 
 
 require("tokyonight").setup({
@@ -24,12 +43,14 @@ require("tokyonight").setup({
 
 
 -- background set transparent
-function ColorMyPencils(color)
-    color = color or "rose-pine"
-    vim.cmd.colorscheme(color)
-
-    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-end
-
-ColorMyPencils()
+--function ColorMyPencils(color)
+--    color = color or "rose-pine"
+--    vim.cmd.colorscheme(color)
+--
+--    --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+--    --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+--    --vim.api.nvim_set_hl(0, 'HarpoonBorder', { fg = c.bg_dark, bg = c.bg_dark })
+--    --vim.api.nvim_set_hl(0, 'HarpoonWindow', { fg = c.fg, bg = c.bg_dark })
+--end
+--
+--ColorMyPencils()
