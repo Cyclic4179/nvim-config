@@ -1,8 +1,4 @@
 -- set theme
---require('rose-pine').setup({
---    --disable_italics = true
---})
---vim.cmd('colorscheme rose-pine')
 require("rose-pine").setup({
     styles = { transparency = true },
     --highlight_groups = {
@@ -18,6 +14,7 @@ require("rose-pine").setup({
     --    Normal = { bg = "none" },
     --    NormalFloat = { bg = "none" },
 
+    --    -- didnt work
     --    --HarpoonBorder = { bg = "none" },
     --    HarpoonBorder = { bg = "none" },
     --},
@@ -42,6 +39,9 @@ require("tokyonight").setup({
 })
 
 
+vim.cmd.colorscheme("rose-pine")
+
+
 -- background set transparent
 --function ColorMyPencils(color)
 --    color = color or "rose-pine"
@@ -49,8 +49,6 @@ require("tokyonight").setup({
 --
 --    --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 --    --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
---    --vim.api.nvim_set_hl(0, 'HarpoonBorder', { fg = c.bg_dark, bg = c.bg_dark })
---    --vim.api.nvim_set_hl(0, 'HarpoonWindow', { fg = c.fg, bg = c.bg_dark })
 --end
 --
 --ColorMyPencils()
