@@ -64,6 +64,9 @@ let
     rose-pine
     tokyonight-nvim
 
+    # icons -> for oil-nvim, telescope-nvim
+    nvim-web-devicons
+
     telescope-nvim
 
     nvim-treesitter.withAllGrammars
@@ -82,6 +85,9 @@ let
     #vim-visual-multi # idk if i want this
     #multicursors-nvim
     #multiple-cursors
+
+    # netrw replacement
+    oil-nvim
 
     # harpoon
     harpoon2

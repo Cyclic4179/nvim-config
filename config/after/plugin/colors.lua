@@ -1,3 +1,6 @@
+-- set icons
+require("nvim-web-devicons").setup()
+
 -- set theme
 require("rose-pine").setup({
     styles = { transparency = true },
