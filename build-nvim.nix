@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, google-styleguide }:
 let
   extraPackages = with pkgs; [
     # search
@@ -129,10 +129,8 @@ let
 
   extraEnvVars = {
     JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
-    ECLIPSE_JAVA_GOOGLE_STYLE = pkgs.fetchurl {
-      url = "https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml";
-      hash = "sha256-mCgDIoRLQWQUOwHOQwuzc2BngvtMpvFmdESuKyHPvGE=";
-    };
+    # https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
+    ECLIPSE_JAVA_GOOGLE_STYLE = "${google-styleguide}/eclipse-java-google-style.xml";
   };
 
   extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';

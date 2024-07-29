@@ -7,12 +7,16 @@
 
   inputs.nixpkgs.url = "nixpkgs/nixpkgs-unstable";
 
+  inputs.google-styleguide.url = "github:google/styleguide/gh-pages";
+  inputs.google-styleguide.flake = false;
+
   outputs =
     {
       self,
       nixpkgs,
       flake-utils,
       nix2vim,
+      google-styleguide
     }:
     {
       overlays.default = final: prev: { neovim = self.packages.${final.system}.neovim; };
@@ -24,7 +28,7 @@
           inherit system;
           overlays = [ nix2vim.overlay ];
         };
-        neovim = import ./build-nvim.nix { inherit pkgs; };
+        neovim = import ./build-nvim.nix { inherit pkgs google-styleguide; };
       in
       {
         apps.default = flake-utils.lib.mkApp {

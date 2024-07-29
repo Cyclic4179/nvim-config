@@ -17,6 +17,23 @@
         "type": "indirect"
       }
     },
+    "google-styleguide": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1721143194,
+        "narHash": "sha256-8Ike5HB9OQ5g12jxTSE30Atv4Nn6j8TtAF9P6NItzG8=",
+        "owner": "google",
+        "repo": "styleguide",
+        "rev": "57ea449d44fef05f0b6ec4aa0d3e45a72ce3c1e5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "google",
+        "ref": "gh-pages",
+        "repo": "styleguide",
+        "type": "github"
+      }
+    },
     "nix2vim": {
       "inputs": {
         "flake-utils": [
@@ -58,6 +75,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "google-styleguide": "google-styleguide",
         "nix2vim": "nix2vim",
         "nixpkgs": "nixpkgs"
       }
