@@ -131,6 +131,8 @@ let
     JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
     # https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
     ECLIPSE_JAVA_GOOGLE_STYLE = "${google-styleguide}/eclipse-java-google-style.xml";
+    VSCODE_JAVA_DEBUG_PATH = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug";
+    #VSCODE_JAVA_TEST_PATH = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test";
   };
 
   extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';

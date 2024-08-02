@@ -1,6 +1,11 @@
 local home = vim.fn.getenv('HOME')
+
 local eclipseJavaGoogleStyle = vim.fn.getenv('ECLIPSE_JAVA_GOOGLE_STYLE')
 local java17path = vim.fn.getenv('JAVA_SE_17')
+
+local vscode_java_debug_path = vim.fn.getenv('VSCODE_JAVA_DEBUG_PATH')
+--local vscode_java_test_path = vim.fn.getenv('VSCODE_JAVA_TEST_PATH')
+
 local jdtls = require('jdtls')
 
 
@@ -44,6 +49,8 @@ local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 
 local workspace_dir = home .. "/.cache/jdtls/workspace/" .. project_name
 
+
+
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 local config = {
     -- Set up lspconfig.
@@ -60,7 +67,7 @@ local config = {
     -- This is the default if not provided, you can remove it. Or adjust as needed.
     -- One dedicated LSP server & client will be started per unique root_dir
     --root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-    root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+    root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
     --root_dir = function(fname)
     --    return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", ".git")(fname) or vim.fn.getcwd()
     --end,
@@ -104,6 +111,26 @@ local config = {
 
     -- java debugger: https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
 }
+
+
+
+----- dap
+-- This bundles definition is the same as in the previous section (java-debug installation)
+local bundles = {
+    vim.fn.glob(vscode_java_debug_path .. "/server/com.microsoft.java.debug.plugin-*.jar", 1),
+};
+
+-- This is the new part
+-- didnt work for some reason
+--vim.list_extend(bundles, vim.split(vim.fn.glob(vscode_java_test_path .. "/server/*.jar", 1), "\n"))
+--vim.print(bundles)
+config['init_options'] = {
+    bundles = bundles,
+}
+----- dap-end
+
+
+
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
 jdtls.start_or_attach(config)
