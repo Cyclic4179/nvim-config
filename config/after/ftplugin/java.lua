@@ -4,7 +4,7 @@ local eclipseJavaGoogleStyle = vim.fn.getenv('ECLIPSE_JAVA_GOOGLE_STYLE')
 local java17path = vim.fn.getenv('JAVA_SE_17')
 
 local vscode_java_debug_path = vim.fn.getenv('VSCODE_JAVA_DEBUG_PATH')
---local vscode_java_test_path = vim.fn.getenv('VSCODE_JAVA_TEST_PATH')
+local vscode_java_test_path = vim.fn.getenv('VSCODE_JAVA_TEST_PATH')
 
 local jdtls = require('jdtls')
 
@@ -116,18 +116,25 @@ local config = {
 
 ----- dap
 -- see https://github.com/mfussenegger/nvim-jdtls#debugger-via-nvim-dap
--- This bundles definition is the same as in the previous section (java-debug installation)
-local bundles = {
-    vim.fn.glob(vscode_java_debug_path .. "/server/com.microsoft.java.debug.plugin-*.jar", 1),
-};
+local _debug = vim.fn.glob(vscode_java_debug_path .. "/server/*.jar", 1)
+local _test = vim.fn.glob(vscode_java_test_path .. "/server/*.jar", 1)
 
--- This is the new part
--- didnt work for some reason
---vim.list_extend(bundles, vim.split(vim.fn.glob(vscode_java_test_path .. "/server/*.jar", 1), "\n"))
---vim.print(bundles)
+local bundles = _debug .. "\n" .. _test
 config['init_options'] = {
-    bundles = bundles,
+    bundles = vim.split(bundles, "\n"),
 }
+-- This bundles definition is the same as in the previous section (java-debug installation)
+--local bundles = {
+--    vim.fn.glob(vscode_java_debug_path .. "/server/com.microsoft.java.debug.plugin-*.jar", 1),
+--};
+--
+---- This is the new part
+---- didnt work for some reason
+--vim.list_extend(bundles, vim.split(vim.fn.glob(vscode_java_test_path .. "/server/*.jar", 1), "\n"))
+----vim.print(bundles)
+--config['init_options'] = {
+--    bundles = bundles,
+--}
 ----- dap-end
 
 
