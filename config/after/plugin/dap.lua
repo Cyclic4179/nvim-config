@@ -67,36 +67,37 @@ end
 --dap.configurations.c = dap.configurations.cpp
 --dap.configurations.rust = dap.configurations.cpp
 dap.configurations.c = {
+  {
     name = "Launch",
     type = "gdb",
     request = "launch",
-    args = { "-h" },
-    program = function()
+    program = coroutine.create(function(dap_run_co)
       local pickers = require("telescope.pickers")
       local finders = require("telescope.finders")
       local conf = require("telescope.config").values
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
-      return coroutine.create(function(dap_run_co)
-        local opts = {}
-        pickers
-          .new(opts, {
-            prompt_title = "Path to executable",
-            finder = finders.new_oneshot_job(
-              { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x" },
-              {}
-            ),
-            sorter = conf.generic_sorter(opts),
-            attach_mappings = function(buffer_number)
-              actions.select_default:replace(function()
-                actions.close(buffer_number)
-                coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
-              end)
-              return true
-            end,
-          })
-          :find()
-      end)
+      local opts = {}
+      pickers
+        .new(opts, {
+          prompt_title = "Path to executable",
+          finder = finders.new_oneshot_job(
+            { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
+            {}
+          ),
+          sorter = conf.generic_sorter(opts),
+          attach_mappings = function(buffer_number)
+            actions.select_default:replace(function()
+              actions.close(buffer_number)
+              coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
+            end)
+            return true
+          end,
+        })
+        :find()
+    end),
+    args = function()
+      return vim.split(vim.fn.input('args: ', '', 'file'), ' ', {trimempty = true})
     end,
     --program = function()
     --  local actions = require "telescope.actions"
@@ -119,10 +120,56 @@ dap.configurations.c = {
     --end,
     cwd = "${workspaceFolder}",
     stopAtBeginningOfMainSubprogram = false,
+  },
 }
-
 dap.configurations.cpp = dap.configurations.c
 dap.configurations.rust = dap.configurations.c
 
 -- go
 require 'dap-go'.setup()
+
+
+--local s = "test \"nice\\ \""
+--local x = vim.split(s, " ", { trimempty = true })
+--
+--local function a()
+--  for y in vim.gsplit(s, ' ', { trimempty = true }) do
+--    print(y)
+--  end
+--end
+--
+--t = {}
+--s = "from=world, to=Lua"
+--for k, v in string.gmatch(s, "(%w+)=(%w+)") do
+--  t[k] = v
+--end
+--print(vim.inspect(t))
+--
+----a()
+--
+--print(vim.inspect(x))
+
+
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
+  require('dap.ui.widgets').hover()
+end)
+vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
+  require('dap.ui.widgets').preview()
+end)
+vim.keymap.set('n', '<Leader>df', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set('n', '<Leader>ds', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.scopes)
+end)
