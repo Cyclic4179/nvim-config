@@ -3,8 +3,8 @@ require("nvim-web-devicons").setup()
 
 -- set theme
 require("rose-pine").setup({
-    styles = { transparency = true },
-    --highlight_groups = {
+  styles = { italic = false, transparency = true },
+  highlight_groups = {
     --    TelescopeBorder = { bg = "none" },
     --    TelescopeNormal = { bg = "none" },
     --    TelescopePromptNormal = { bg = "base" },
@@ -20,7 +20,12 @@ require("rose-pine").setup({
     --    -- didnt work
     --    --HarpoonBorder = { bg = "none" },
     --    HarpoonBorder = { bg = "none" },
-    --},
+    DapBreakpoint = { fg = "red" },
+    DapBreakpointCondition = { fg = "yellow" },
+    DapLogPoint = { fg = "iris" },
+    DapStopped = { bg = "#2d2c3f" },
+    DapStoppedSign = { bg = "#2d2c3f", fg = "red" },
+  },
 })
 
 
@@ -45,6 +50,7 @@ require("rose-pine").setup({
 vim.cmd.colorscheme("rose-pine")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+--vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 
 

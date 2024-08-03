@@ -1,28 +1,37 @@
 local dap = require('dap')
 local dapui = require('dapui')
-require('nvim-dap-virtual-text').setup()
+require('nvim-dap-virtual-text').setup{}
 dapui.setup()
 
-vim.api.nvim_set_keymap("n", "<leader>dt", ":lua require'dapui'.toggle()<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>db", ":DapToggleBreakpoint<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>dc", ":DapContinue<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>dr", ":lua require('dapui').open({reset = true})<CR>", { noremap = true })
---vim.api.nvim_set_keymap("n", "<leader>dr", ":lua require<CR>", { noremap = true })
 
 --vim.fn.sign_define('DapBreakpoint', { text='🔴', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
-vim.api.nvim_set_hl(0, "DapStoppedLinehl", { bg = "#555530" })
-vim.fn.sign_define("DapStopped", { text = "→", texthl = "Error", linehl = "DapStoppedLinehl", numhl = "" })
+--vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#555530" })
+--vim.api.nvim_set_hl(0, "DapStopped", { bg = "#474656" })
+--vim.fn.sign_define("DapStopped", { text = "→", texthl = "Error", linehl = "DapStoppedLinehl", numhl = "" })
+local sign = vim.fn.sign_define
+
+sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = ""})
+sign("DapBreakpointCondition", { text = "●", texthl = "DapBreakpointCondition", linehl = "", numhl = ""})
+sign("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = ""})
+sign('DapStopped', { text='→', texthl='DapStoppedSign', linehl='DapStopped', numhl= 'DapStopped' })
 
 
---vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
---vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
---vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
---vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
---vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
---vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
---vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
---vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
---vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+
+vim.keymap.set("n", "<leader>dt", function() require'dapui'.toggle() end)
+--vim.keymap.set("n", "<leader>db", ":DapToggleBreakpoint<CR>")
+--vim.keymap.set("n", "<leader>dc", ":DapContinue<CR>")
+vim.keymap.set("n", "<leader>ds", function() require('dapui').open({reset = true}) end)
+
+vim.keymap.set('n', '<Leader>df', function() require('dap').focus_frame() end)
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
 --vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
 --  require('dap.ui.widgets').hover()
 --end)
@@ -57,7 +66,7 @@ dap.adapters.gdb = function (cb, cfg)
   cb {
     type = "executable",
     command = "gdb",
-    args = vim.list_extend(gdb_args, cfg.args or {})
+    args = vim.list_extend(gdb_args, cfg.xxx_program_args or {})
   }
 end
 --dap.adapters.cppdbg = {
@@ -97,32 +106,35 @@ dap.configurations.c = {
     name = "Launch",
     type = "gdb",
     request = "launch",
-    program = coroutine.create(function(dap_run_co)
-      local pickers = require("telescope.pickers")
-      local finders = require("telescope.finders")
-      local conf = require("telescope.config").values
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      local opts = {}
-      pickers
-        .new(opts, {
-          prompt_title = "Path to executable",
-          finder = finders.new_oneshot_job(
-            { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
-            {}
-          ),
-          sorter = conf.generic_sorter(opts),
-          attach_mappings = function(buffer_number)
-            actions.select_default:replace(function()
-              actions.close(buffer_number)
-              coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
-            end)
-            return true
-          end,
-        })
-        :find()
-    end),
-    args = function()
+    program = function()
+      return coroutine.create(function(dap_run_co)
+        local pickers = require("telescope.pickers")
+        local finders = require("telescope.finders")
+        local conf = require("telescope.config").values
+        local actions = require("telescope.actions")
+        local action_state = require("telescope.actions.state")
+        local opts = {}
+        pickers
+          .new(opts, {
+            prompt_title = "Path to executable",
+            finder = finders.new_oneshot_job(
+              { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
+              {}
+            ),
+            sorter = conf.generic_sorter(opts),
+            attach_mappings = function(buffer_number)
+              actions.select_default:replace(function()
+                actions.close(buffer_number)
+                coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
+              end)
+              return true
+            end,
+          })
+          :find()
+      end)
+    end,
+    -- xxx is prepended -> first asked for program, then for arguments
+    xxx_program_args = function()
       return vim.split(vim.fn.input('args: ', '', 'file'), ' ', {trimempty = true})
     end,
     --program = function()
