@@ -92,3 +92,5 @@ cmp.setup.cmdline(':', {
         }
     })
 })
+
+vim.keymap.set('c', '<tab>', '<C-z>', { silent = false }) -- to fix cmp https://github.com/hrsh7th/nvim-cmp/issues/1511
