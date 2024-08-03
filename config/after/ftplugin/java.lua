@@ -115,6 +115,7 @@ local config = {
 
 
 ----- dap
+-- see https://github.com/mfussenegger/nvim-jdtls#debugger-via-nvim-dap
 -- This bundles definition is the same as in the previous section (java-debug installation)
 local bundles = {
     vim.fn.glob(vscode_java_debug_path .. "/server/com.microsoft.java.debug.plugin-*.jar", 1),
