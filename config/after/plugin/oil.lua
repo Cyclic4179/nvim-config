@@ -30,9 +30,12 @@ require("oil").setup({
         --end,
         -- not working for some reason
         --["<C-j>"] = { "actions.preview", opts = { vertical = true, split = "botright" }, desc = "Preview the entry in vertical split" },
-        ["<C-j>"] = { callback = function()
-            require("oil").open_preview({ vertical = true, split = "botright" })
-        end, desc = "Preview the entry in vertical split" },
+        ["<C-j>"] = {
+            callback = function()
+                require("oil").open_preview({ vertical = true, split = "botright" })
+            end,
+            desc = "Preview the entry in vertical split"
+        },
         ["<C-c>"] = "actions.close",
         ["<C-l>"] = "actions.refresh",
         ["-"] = "actions.parent",

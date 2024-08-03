@@ -28,7 +28,7 @@ vim.keymap.set('n', '<leader>ps', function()
 end)
 
 
-vim.keymap.set('n', '<leader>pt', function ()
+vim.keymap.set('n', '<leader>pt', function()
     builtin.grep_string({ search = "TODO" })
 end, {})
 vim.keymap.set('n', '<leader>pg', builtin.live_grep)

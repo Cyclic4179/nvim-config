@@ -133,7 +133,7 @@ lspconfig.lua_ls.setup {
         },
     },
 }
-lspconfig.gopls.setup{
+lspconfig.gopls.setup {
     -- for postfix snippets and analyzers
     capabilities = capabilities,
     settings = {

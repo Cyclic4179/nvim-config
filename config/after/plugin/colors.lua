@@ -3,29 +3,29 @@ require("nvim-web-devicons").setup()
 
 -- set theme
 require("rose-pine").setup({
-  styles = { italic = false, transparency = true },
-  highlight_groups = {
-    --    TelescopeBorder = { bg = "none" },
-    --    TelescopeNormal = { bg = "none" },
-    --    TelescopePromptNormal = { bg = "base" },
-    --    TelescopeResultsNormal = { bg = "none" },
-    --    TelescopeSelection = { bg = "base" },
-    --    TelescopeSelectionCaret = { bg = "rose" },
+    styles = { italic = false, transparency = true },
+    highlight_groups = {
+        --TelescopeBorder = { bg = "none" },
+        --TelescopeNormal = { bg = "none" },
+        --TelescopePromptNormal = { bg = "base" },
+        --TelescopeResultsNormal = { bg = "none" },
+        --TelescopeSelection = { bg = "base" },
+        --TelescopeSelectionCaret = { bg = "rose" },
 
-    --    -- transparent background
-    --    NormalNC = { bg = "none" },
-    --    Normal = { bg = "none" },
-    --    NormalFloat = { bg = "none" },
+        -- transparent background
+        --NormalNC = { bg = "none" },
+        --Normal = { bg = "none" },
+        --NormalFloat = { bg = "none" },
 
-    --    -- didnt work
-    --    --HarpoonBorder = { bg = "none" },
-    --    HarpoonBorder = { bg = "none" },
-    DapBreakpoint = { fg = "red" },
-    DapBreakpointCondition = { fg = "yellow" },
-    DapLogPoint = { fg = "iris" },
-    DapStopped = { bg = "#2d2c3f" },
-    DapStoppedSign = { bg = "#2d2c3f", fg = "red" },
-  },
+        -- didnt work
+        --HarpoonBorder = { bg = "none" },
+
+        DapBreakpoint = { fg = "red" },
+        DapBreakpointCondition = { fg = "yellow" },
+        DapLogPoint = { fg = "iris" },
+        DapStopped = { bg = "#2d2c3f" },
+        DapStoppedSign = { bg = "#2d2c3f", fg = "red" },
+    },
 })
 
 
