@@ -38,15 +38,15 @@ vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
 -- Run last: https://github.com/mfussenegger/nvim-dap/issues/1025
 local last_config = nil
 dap.listeners.after.event_initialized["store_config"] = function(session)
-  last_config = session.config
+    last_config = session.config
 end
 
 local function debug_run_last()
-  if last_config then
-    dap.run(last_config)
-  else
-    dap.continue()
-  end
+    if last_config then
+        dap.run(last_config)
+    else
+        dap.continue()
+    end
 end
 
 vim.keymap.set('n', '<Leader>dl', function()
@@ -90,10 +90,10 @@ dap.adapters.gdb = {
     command = "gdb",
     args = { "--quiet", "--interpreter=dap" },
     enrich_config = function(config, on_config)
-      local final_config = vim.deepcopy(config)
-      final_config.program = config[1]
-      final_config.args = config[2]
-      on_config(final_config)
+        local final_config = vim.deepcopy(config)
+        final_config.program = config[1]
+        final_config.args = config[2]
+        on_config(final_config)
     end,
     --enrichConfig = function(cfg, cb)
     --    cfg.args = cfg.xxx_program_args
@@ -101,38 +101,7 @@ dap.adapters.gdb = {
     --end
 }
 
---dap.adapters.cppdbg = {
---  id = 'cppdbg',
---  type = 'executable',
---  command = '/nix/store/m4g769whwylg57gycqccl5jq2avcpkdd-vscode-extension-ms-vscode-cpptools-1.17.3/share/vscode/extension/debugAdapters/bin/OpenDebugAD7',
---}
---dap.configurations.cpp = {
---  {
---    name = "Launch file",
---    type = "cppdbg",
---    request = "launch",
---    program = function()
---      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
---    end,
---    cwd = '${workspaceFolder}',
---    stopAtEntry = true,
---  },
---  {
---    name = 'Attach to gdbserver :1234',
---    type = 'cppdbg',
---    request = 'launch',
---    MIMode = 'gdb',
---    miDebuggerServerAddress = 'localhost:1234',
---    miDebuggerPath = '/usr/bin/gdb',
---    cwd = '${workspaceFolder}',
---    program = function()
---      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
---    end,
---  },
---}
---
---dap.configurations.c = dap.configurations.cpp
---dap.configurations.rust = dap.configurations.cpp
+-- maybe ref: https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
 dap.configurations.c = {
     {
         -- program is in 1, args in 2 -> evaluated in this order, fixed later with adapters.c.enrichConfig
@@ -155,26 +124,11 @@ dap.configurations.c = {
             end)
         end,
         function()
-            return vim.split(vim.fn.input('Arguments (split on \' +\'): ', '', 'file'), ' +', { trimempty = true })
+            return vim.split(vim.fn.input('Arguments (sep: \' +\'): ', '', 'file'), ' +', { trimempty = true })
         end,
         name = "Launch",
         type = "gdb",
         request = "launch",
-        --program = function()
-        --    local path = vim.fn.input({
-        --        prompt = 'Path to executable: ',
-        --        default = vim.fn.getcwd() .. '/',
-        --        completion = 'file',
-        --    })
-
-        --    return (path and path ~= '') and path or dap.ABORT
-        --end,
-        --xxx_program_args = function()
-        --    local args_str = vim.fn.input({
-        --        prompt = 'Arguments: ',
-        --    })
-        --    return vim.split(args_str, ' +')
-        --end,
         cwd = "${workspaceFolder}",
         stopAtBeginningOfMainSubprogram = false,
     },
@@ -184,6 +138,9 @@ dap.configurations.rust = dap.configurations.c
 
 -- go
 require 'dap-go'.setup()
+
+
+
 
 
 --local s = "test \"nice\\ \""
@@ -232,3 +189,39 @@ require 'dap-go'.setup()
 --                }):find()
 --            end)
 --        end,
+
+
+
+--dap.adapters.cppdbg = {
+--  id = 'cppdbg',
+--  type = 'executable',
+--  command = '/nix/store/m4g769whwylg57gycqccl5jq2avcpkdd-vscode-extension-ms-vscode-cpptools-1.17.3/share/vscode/extension/debugAdapters/bin/OpenDebugAD7',
+--}
+--dap.configurations.cpp = {
+--  {
+--    name = "Launch file",
+--    type = "cppdbg",
+--    request = "launch",
+--    program = function()
+--      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+--    end,
+--    cwd = '${workspaceFolder}',
+--    stopAtEntry = true,
+--  },
+--  {
+--    name = 'Attach to gdbserver :1234',
+--    type = 'cppdbg',
+--    request = 'launch',
+--    MIMode = 'gdb',
+--    miDebuggerServerAddress = 'localhost:1234',
+--    miDebuggerPath = '/usr/bin/gdb',
+--    cwd = '${workspaceFolder}',
+--    program = function()
+--      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+--    end,
+--  },
+--}
+--
+--dap.configurations.c = dap.configurations.cpp
+--dap.configurations.rust = dap.configurations.cpp
+
