@@ -108,14 +108,23 @@ local config = {
             }
         }
     },
-
-    -- java debugger: https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
 }
 
 
 
 ----- dap
--- see https://github.com/mfussenegger/nvim-jdtls#debugger-via-nvim-dap
+-- java debugger: https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
+
+-- setup debug config for main class
+-- :lua require("jdtls.dap").setup_dap_main_class_configs()
+-- or
+-- :JdtUpdateDebugConfigs
+
+-- functions for tests are:
+-- :lua require("jdtls.dap").test_class()
+-- :lua require("jdtls.dap").test_nearest_method()
+-- :lua require("jdtls.dap").pick_test()
+
 -- This bundles definition is the same as in the previous section (java-debug installation)
 local bundles = {
     vim.fn.glob(vscode_java_debug_path .. "/server/com.microsoft.java.debug.plugin-*.jar", 1),

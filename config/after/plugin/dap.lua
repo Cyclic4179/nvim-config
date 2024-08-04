@@ -32,7 +32,29 @@ vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
 vim.keymap.set('n', '<Leader>lp',
     function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
 vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
-vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+--vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+
+
+-- Run last: https://github.com/mfussenegger/nvim-dap/issues/1025
+local last_config = nil
+dap.listeners.after.event_initialized["store_config"] = function(session)
+  last_config = session.config
+end
+
+local function debug_run_last()
+  if last_config then
+    dap.run(last_config)
+  else
+    dap.continue()
+  end
+end
+
+vim.keymap.set('n', '<Leader>dl', function()
+    debug_run_last()
+end)
+
+
+
 --vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
 --  require('dap.ui.widgets').hover()
 --end)
@@ -49,7 +71,6 @@ vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
 --end)
 
 
---local dap, dapui =require("dap"),require("dapui")
 dap.listeners.after.event_initialized["dapui_config"] = function()
     dapui.open()
 end
@@ -61,15 +82,25 @@ end
 --end
 
 
+
+
 -- c, see https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(gdb-via--vscode-cpptools)
-dap.adapters.gdb = function(cb, cfg)
-    local gdb_args = { "-i", "dap", "--args", cfg.program }
-    cb {
-        type = "executable",
-        command = "gdb",
-        args = vim.list_extend(gdb_args, cfg.xxx_program_args or {})
-    }
-end
+dap.adapters.gdb = {
+    type = "executable",
+    command = "gdb",
+    args = { "--quiet", "--interpreter=dap" },
+    enrich_config = function(config, on_config)
+      local final_config = vim.deepcopy(config)
+      final_config.program = config[1]
+      final_config.args = config[2]
+      on_config(final_config)
+    end,
+    --enrichConfig = function(cfg, cb)
+    --    cfg.args = cfg.xxx_program_args
+    --    cb(cfg)
+    --end
+}
+
 --dap.adapters.cppdbg = {
 --  id = 'cppdbg',
 --  type = 'executable',
@@ -104,58 +135,45 @@ end
 --dap.configurations.rust = dap.configurations.cpp
 dap.configurations.c = {
     {
+        -- program is in 1, args in 2 -> evaluated in this order, fixed later with adapters.c.enrichConfig
+        function()
+            return coroutine.create(function(dap_run_co)
+                local actions = require "telescope.actions"
+                local action_state = require "telescope.actions.state"
+                require 'telescope.builtin'.find_files({
+                    title = "Path to executable",
+                    no_ignore = true,
+                    find_command = { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
+                    attach_mappings = function(buffer_number)
+                        actions.select_default:replace(function()
+                            actions.close(buffer_number)
+                            coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
+                        end)
+                        return true
+                    end,
+                })
+            end)
+        end,
+        function()
+            return vim.split(vim.fn.input('Arguments (split on \' +\'): ', '', 'file'), ' +', { trimempty = true })
+        end,
         name = "Launch",
         type = "gdb",
         request = "launch",
-        program = function()
-            return coroutine.create(function(dap_run_co)
-                local pickers = require("telescope.pickers")
-                local finders = require("telescope.finders")
-                local conf = require("telescope.config").values
-                local actions = require("telescope.actions")
-                local action_state = require("telescope.actions.state")
-                local opts = {}
-                pickers
-                    .new(opts, {
-                        prompt_title = "Path to executable",
-                        finder = finders.new_oneshot_job(
-                            { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
-                            {}
-                        ),
-                        sorter = conf.generic_sorter(opts),
-                        attach_mappings = function(buffer_number)
-                            actions.select_default:replace(function()
-                                actions.close(buffer_number)
-                                coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
-                            end)
-                            return true
-                        end,
-                    })
-                    :find()
-            end)
-        end,
-        -- xxx is prepended -> first asked for program, then for arguments
-        xxx_program_args = function()
-            return vim.split(vim.fn.input('args: ', '', 'file'), ' ', { trimempty = true })
-        end,
         --program = function()
-        --  local actions = require "telescope.actions"
-        --  local action_state = require "telescope.actions.state"
-        --  require 'telescope.builtin'.find_files({
-        --    title = "Choose executable",
-        --    no_ignore = true,
-        --    find_command = { "fd", "--type", "x", "--color", "never", },
-        --    attach_mappings = function(prompt_bufnr, map)
-        --      actions.select_default:replace(function()
-        --        actions.close(prompt_bufnr)
-        --        -- print(vim.inspect(selection))
-        --        --vim.api.nvim_put({ selection[1] }, "", false, true)
-        --      end)
-        --      return true
-        --    end,
-        --  })
-        --  return action_state.get_selected_entry()
-        --  --return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        --    local path = vim.fn.input({
+        --        prompt = 'Path to executable: ',
+        --        default = vim.fn.getcwd() .. '/',
+        --        completion = 'file',
+        --    })
+
+        --    return (path and path ~= '') and path or dap.ABORT
+        --end,
+        --xxx_program_args = function()
+        --    local args_str = vim.fn.input({
+        --        prompt = 'Arguments: ',
+        --    })
+        --    return vim.split(args_str, ' +')
         --end,
         cwd = "${workspaceFolder}",
         stopAtBeginningOfMainSubprogram = false,
@@ -187,3 +205,30 @@ require 'dap-go'.setup()
 ----a()
 --
 --print(vim.inspect(x))
+
+
+
+--        program = function()
+--            return coroutine.create(function(dap_run_co)
+--                local pickers = require("telescope.pickers")
+--                local finders = require("telescope.finders")
+--                local conf = require("telescope.config").values
+--                local actions = require("telescope.actions")
+--                local action_state = require("telescope.actions.state")
+--                pickers.new({}, {
+--                    prompt_title = "Path to executable",
+--                    finder = finders.new_oneshot_job(
+--                        { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
+--                        {}
+--                    ),
+--                    sorter = conf.generic_sorter({}),
+--                    attach_mappings = function(buffer_number)
+--                        actions.select_default:replace(function()
+--                            actions.close(buffer_number)
+--                            coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
+--                        end)
+--                        return true
+--                    end,
+--                }):find()
+--            end)
+--        end,
