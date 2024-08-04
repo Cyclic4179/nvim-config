@@ -95,10 +95,6 @@ dap.adapters.gdb = {
         final_config.args = config[2]
         on_config(final_config)
     end,
-    --enrichConfig = function(cfg, cb)
-    --    cfg.args = cfg.xxx_program_args
-    --    cb(cfg)
-    --end
 }
 
 -- maybe ref: https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
@@ -124,7 +120,35 @@ dap.configurations.c = {
             end)
         end,
         function()
-            return vim.split(vim.fn.input('Arguments (sep: \' +\'): ', '', 'file'), ' +', { trimempty = true })
+            --print(vim.inspect(vim.tbl_map(function(value)
+            --    return string.gsub(value, '\\ ', ' ')
+            --end, vim.split("a\\ a b", ' ', { trimempty = true }))))
+
+            -- TODO: until now, only escaping ' ' with '\ ' is supported, everything else will remain
+            -- unchanged when passed to application (eg single or double quotes must be removed)
+            -- (this wont be splitted and the backspace will be removed: '\ ' -> ' ')
+            -- (otherwise sep for split is: ' ')
+            local input = vim.fn.input('Arguments: ', '', 'file')
+            local args = {}
+            local x = ''
+
+            for s in vim.gsplit(input, ' ', { trimempty = true }) do
+                if string.sub(s, #s, #s) == "\\" then
+                    --print(s)
+                    x = x .. string.sub(s, 0, #s - 1) .. ' '
+                    --print(x)
+                else
+                    table.insert(args, x .. s)
+                    x = ''
+                end
+            end
+
+            return args
+            --print(vim.inspect(args))
+            --print(vim.inspect(vim.tbl_map(function(value)
+            --    return string.gsub(value, '\\ ', ' ')
+            --end, vim.split("a\\ a b", ' ', { trimempty = true }))))
+            --return print(vim.inspect(vim.split(vim.fn.input('Arguments (sep: \' \', \'\\ \' -> \' \'): ', '', 'file'), '\\ ', { trimempty = true })))
         end,
         name = "Launch",
         type = "gdb",
