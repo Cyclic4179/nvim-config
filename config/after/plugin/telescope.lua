@@ -21,6 +21,7 @@ local builtin = require('telescope.builtin')
 --  end
 --end
 
+
 vim.keymap.set('n', '<leader>pf', builtin.find_files)
 vim.keymap.set('n', '<C-P>', builtin.git_files)
 vim.keymap.set('n', '<leader>ps', function()
@@ -28,7 +29,19 @@ vim.keymap.set('n', '<leader>ps', function()
 end)
 
 
+
 vim.keymap.set('n', '<leader>pt', function()
     builtin.grep_string({ search = "TODO" })
 end, {})
-vim.keymap.set('n', '<leader>pg', builtin.live_grep)
+--vim.keymap.set('n', '<leader>pg', builtin.live_grep)
+
+
+-- TODO not sure how nice this is
+vim.keymap.set('n', '<leader>c', builtin.quickfix)
+vim.keymap.set('n', '<leader>hc', builtin.quickfixhistory)
+vim.keymap.set('n', '[c', '<CMD>:cnext<CR>')
+vim.keymap.set('n', ']c', '<CMD>:cprev<CR>')
+
+-- maybe sometime
+--vim.keymap.set('n', '[l', '<CMD>:lnext<CR>')
+--vim.keymap.set('n', ']l', '<CMD>:lprev<CR>')
