@@ -61,7 +61,19 @@ let
 
   plugins = with pkgs.vimPlugins; [
     # theme
-    rose-pine
+    # until nixpkgs has newer rose-pine version
+    #rose-pine
+    (pkgs.vimUtils.buildVimPlugin {
+      pname = "rose-pine";
+      version = "2024-08-25";
+      src = pkgs.fetchFromGitHub {
+        owner = "rose-pine";
+        repo = "neovim";
+        rev = "8b1fd252255a7f2c41b4192a787ab62660b29f72";
+        sha256 = "sha256-KYlt0ryKTBV5vimnq3rxEQOhkiqLK/EV7zMxVNdSUTY=";
+      };
+      meta.homepage = "https://github.com/rose-pine/neovim/";
+    })
     tokyonight-nvim
 
     # icons -> for oil-nvim, telescope-nvim

@@ -1,6 +1,6 @@
 local opts = { noremap = true, silent = true }
 vim.keymap.set("i", "<C-J>", function() require 'luasnip'.jump(1) end, opts)
-vim.keymap.set("i", "<C-K>", function() require 'luasnip'.jump(-1) end, opts)
+--vim.keymap.set("i", "<C-K>", function() require 'luasnip'.jump(-1) end, opts)
 --vim.keymap.set({ "i", "s" }, "<C-J>", function() require 'luasnip'.jump(1) end, opts)
 --vim.keymap.set({ "i", "s" }, "<C-K>", function() require 'luasnip'.jump(-1) end, opts)
 

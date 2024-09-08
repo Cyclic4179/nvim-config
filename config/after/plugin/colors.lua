@@ -4,6 +4,7 @@ require("nvim-web-devicons").setup()
 -- set theme
 require("rose-pine").setup({
     styles = { italic = false, transparency = true },
+    --dim_inactive_windows = true,
     highlight_groups = {
         --TelescopeBorder = { bg = "none" },
         --TelescopeNormal = { bg = "none" },
@@ -25,6 +26,14 @@ require("rose-pine").setup({
         DapLogPoint = { fg = "iris" },
         DapStopped = { bg = "#2d2c3f" },
         DapStoppedSign = { bg = "#2d2c3f", fg = "red" },
+    },
+    -- overrides main palette
+    palette = {
+        main = {
+            -- default text color is too bright for me
+            -- see https://coolors.co/gradient-palette/b3b1ad-e0def4?number=10
+            text = "#B3B1AD",
+        },
     },
 })
 
@@ -48,8 +57,8 @@ require("rose-pine").setup({
 
 
 vim.cmd.colorscheme("rose-pine")
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+--vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+--vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 
@@ -64,3 +73,28 @@ vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 --end
 --
 --ColorMyPencils()
+
+
+
+-- see https://vi.stackexchange.com/questions/39074/user-borders-around-lsp-floating-windows
+local _border = "rounded" -- none single double rounded solid shadow
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+    vim.lsp.handlers.hover, {
+        border = _border
+    }
+)
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+    vim.lsp.handlers.signature_help, {
+        border = _border
+    }
+)
+
+vim.diagnostic.config {
+    float = { border = _border }
+}
+
+require('lspconfig.ui.windows').default_options = {
+    border = _border
+}
