@@ -1,4 +1,4 @@
-{ pkgs, google-styleguide }:
+{ pkgs, inputs }:
 let
   extraPackages = with pkgs; [
     # search
@@ -26,7 +26,7 @@ let
       with ps;
       [
         python-lsp-server
-        python-lsp-black.override { pytestCheckHook = null; } # didnt build with tests enabled :shrug:
+        (python-lsp-black.override { pytestCheckHook = null; }) # didnt build with tests enabled :shrug:
         pyls-isort
         pylsp-mypy
       ]
@@ -130,7 +130,7 @@ let
   extraEnvVars = {
     JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
     # https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
-    ECLIPSE_JAVA_GOOGLE_STYLE = "${google-styleguide}/eclipse-java-google-style.xml";
+    ECLIPSE_JAVA_GOOGLE_STYLE = "${inputs.google-styleguide}/eclipse-java-google-style.xml";
     VSCODE_JAVA_DEBUG_PATH = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug";
     #VSCODE_JAVA_TEST_PATH = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test";
     # wait until at least vscode-java-test 0.41 is out (https://github.com/microsoft/vscode-java-test/issues/1681)

@@ -16,8 +16,8 @@
       nixpkgs,
       flake-utils,
       nix2vim,
-      google-styleguide
-    }:
+      ...
+    }@inputs:
     {
       overlays.default = final: prev: { neovim = self.packages.${final.system}.neovim; };
     }
@@ -28,7 +28,7 @@
           inherit system;
           overlays = [ nix2vim.overlay ];
         };
-        neovim = import ./build-nvim.nix { inherit pkgs google-styleguide; };
+        neovim = import ./build-nvim.nix { inherit pkgs inputs; };
       in
       {
         apps.default = flake-utils.lib.mkApp {
