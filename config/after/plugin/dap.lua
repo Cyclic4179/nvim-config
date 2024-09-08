@@ -91,10 +91,18 @@ dap.adapters.gdb = {
     args = { "--quiet", "--interpreter=dap" },
     enrich_config = function(config, on_config)
         local final_config = vim.deepcopy(config)
-        final_config.program = config[1]
-        final_config.args = config[2]
+        final_config.program = final_config.program or final_config[1]
+        final_config.args = final_config.args or final_config[2]
         on_config(final_config)
     end,
+    -- seems to have no effect
+    --setupCommands = {
+    --    {
+    --        text = '-enable-pretty-printing',
+    --        description = 'enable pretty printing',
+    --        ignoreFailures = false
+    --    },
+    --},
 }
 
 -- maybe ref: https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
@@ -142,6 +150,8 @@ dap.configurations.c = {
                     x = ''
                 end
             end
+
+            print("using args: " .. vim.inspect(args))
 
             return args
             --print(vim.inspect(args))

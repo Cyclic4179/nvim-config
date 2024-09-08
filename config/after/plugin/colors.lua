@@ -32,7 +32,10 @@ require("rose-pine").setup({
         main = {
             -- default text color is too bright for me
             -- see https://coolors.co/gradient-palette/b3b1ad-e0def4?number=10
-            text = "#B3B1AD",
+            --text = "#B3B1AD",
+            --text = "#BDBBBD",
+            text = "#D1CFDC",
+            --text = "#CCCAD4",
         },
     },
 })
@@ -57,9 +60,9 @@ require("rose-pine").setup({
 
 
 vim.cmd.colorscheme("rose-pine")
---vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
---vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
---vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 
 

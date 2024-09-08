@@ -81,9 +81,18 @@ let
 
     telescope-nvim
 
-    nvim-treesitter.withAllGrammars
-    playground # treesitter playground
+    nvim-treesitter
+    #playground # treesitter playground
     nvim-treesitter-context
+    # nvim-treesitter-textobjects # i dont need this
+
+    # Link together all treesitter grammars into single derivation
+    # for some reason we need to do this
+    (pkgs.symlinkJoin {
+      name = "nix-treesitter-parsers";
+      paths = nvim-treesitter.withAllGrammars.dependencies;
+    })
+
 
     undotree
 
