@@ -38,7 +38,7 @@ end, {})
 
 -- TODO not sure how nice this is
 vim.keymap.set('n', '<leader>c', builtin.quickfix)
-vim.keymap.set('n', '<leader>hc', builtin.quickfixhistory)
+--vim.keymap.set('n', '<leader>hc', builtin.quickfixhistory)
 vim.keymap.set('n', '[c', '<CMD>:cnext<CR>')
 vim.keymap.set('n', ']c', '<CMD>:cprev<CR>')
 
