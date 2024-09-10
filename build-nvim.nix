@@ -79,6 +79,9 @@ let
     # icons -> for oil-nvim, telescope-nvim
     nvim-web-devicons
 
+    # trying out ...
+    trouble-nvim
+
     telescope-nvim
 
     #nvim-treesitter
