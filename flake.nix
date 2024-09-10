@@ -1,9 +1,9 @@
 {
   description = "NeoVim config";
 
-  inputs.nix2vim.url = "github:gytis-ivaskevicius/nix2vim";
-  inputs.nix2vim.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.nix2vim.inputs.flake-utils.follows = "flake-utils";
+  #inputs.nix2vim.url = "github:gytis-ivaskevicius/nix2vim";
+  #inputs.nix2vim.inputs.nixpkgs.follows = "nixpkgs";
+  #inputs.nix2vim.inputs.flake-utils.follows = "flake-utils";
 
   inputs.nixpkgs.url = "nixpkgs/nixpkgs-unstable";
 
@@ -15,18 +15,19 @@
       self,
       nixpkgs,
       flake-utils,
-      nix2vim,
+      #nix2vim,
+      #google-styleguide,
       ...
     }@inputs:
     {
-      overlays.default = final: prev: { neovim = self.packages.${final.system}.neovim; };
+      overlays.default = [ (final: prev: { neovim = self.packages.${final.system}.neovim; }) ];
     }
     // flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ nix2vim.overlay ];
+          #overlays = [ nix2vim.overlay ];
         };
         neovim = import ./build-nvim.nix { inherit pkgs inputs; };
       in

@@ -59,7 +59,7 @@ let
     gopls
   ];
 
-  plugins = with pkgs.vimPlugins; [
+  extraPlugins = with pkgs.vimPlugins; [
     # theme
     # until nixpkgs has newer rose-pine version
     #rose-pine
@@ -146,10 +146,10 @@ let
     #vim-nix # i dont use this
 
     # personal config
-    {
-      name = "config";
-      outPath = "${./config}";
-    }
+    #{
+    #  name = "config";
+    #  outPath = "${./config}";
+    #}
   ];
 
   extraEnvVars = {
@@ -160,29 +160,143 @@ let
     #VSCODE_JAVA_TEST_PATH = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test";
     # wait until at least vscode-java-test 0.41 is out (https://github.com/microsoft/vscode-java-test/issues/1681)
     VSCODE_JAVA_TEST_PATH =
-      let vscode-java-test = with pkgs; vscode-utils.buildVscodeMarketplaceExtension {
-        mktplcRef = {
-          name = "vscode-java-test";
-          publisher = "vscjava";
-          version = "0.42.2024080106";
-          hash = "sha256-bg6ckBp8VJwXDp877wqt4MAyBPNJZWog/aEptbSaPg4=";
-        };
-        meta = {
-          license = lib.licenses.mit;
-        };
-      };
+      let
+        vscode-java-test =
+          with pkgs;
+          vscode-utils.buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              name = "vscode-java-test";
+              publisher = "vscjava";
+              version = "0.42.2024080106";
+              hash = "sha256-bg6ckBp8VJwXDp877wqt4MAyBPNJZWog/aEptbSaPg4=";
+            };
+            meta = {
+              license = lib.licenses.mit;
+            };
+          };
       in
       "${vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test";
   };
 
+  lib = pkgs.lib;
+
+  pluginPath = pkgs.linkFarm "lazyvim-nix-plugins" (builtins.map mkEntryFromDrv extraPlugins);
+
+  mkEntryFromDrv =
+    drv:
+    if lib.isDerivation drv then
+      {
+        name = "${lib.getName drv}";
+        path = drv;
+      }
+    else
+      drv;
+
+  #envVarString = lib.pipe extraEnvVars [
+  #  builtins.attrNames
+  #  (builtins.map (name: "${name}=${extraEnvVars.${name}}"))
+  #  (builtins.concatStringsSep " ")
+  #];
+  #envVarString = builtins.concatStringsSep " " (
+  #  builtins.map (name: "${name}=${extraEnvVars.${name}}") (builtins.attrNames extraEnvVars)
+  #);
+
+  # paths to executables that should be available when running nvim
   extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
+  # env vars for configuration, probably better done differently :man_shrugging:
   extraMakeWrapperArgsEnvVars = builtins.concatStringsSep " " (
     pkgs.lib.mapAttrsToList (name: value: ''--set ${name} ${value}'') extraEnvVars
   );
-in
-pkgs.neovimBuilder {
-  inherit plugins;
 
-  # packages needed
-  extraMakeWrapperArgs = extraMakeWrapperArgsPath + " " + extraMakeWrapperArgsEnvVars;
-}
+  #neovimRuntimeDependencies = pkgs.symlinkJoin {
+  #  name = "neovimRuntimeDependencies";
+  #  paths = extraPackages;
+  #};
+
+  neovimWrapped = pkgs.wrapNeovim pkgs.neovim-unwrapped {
+    extraMakeWrapperArgs = extraMakeWrapperArgsPath + extraMakeWrapperArgsEnvVars;
+    configure = {
+      customRC = # vim
+        ''
+          lua<<EOF
+          require("lazy").setup({
+            defaults = { lazy = true },
+            dev = {
+              -- reuse files from pkgs.vimPlugins.*
+              path = vim.g.plugin_path,
+              patterns = { "." },
+              -- fallback to download
+              fallback = false,
+            },
+            spec = {
+              { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+              --{ import = "lazyvim.plugins.extras.coding.yanky" },
+              --{ import = "lazyvim.plugins.extras.dap.core" },
+              --{ import = "lazyvim.plugins.extras.lang.clangd" },
+              --{ import = "lazyvim.plugins.extras.lang.cmake" },
+              --{ import = "lazyvim.plugins.extras.lang.markdown" },
+              --{ import = "lazyvim.plugins.extras.lang.rust" },
+              --{ import = "lazyvim.plugins.extras.lang.yaml" },
+              --{ import = "lazyvim.plugins.extras.lsp.none-ls" },
+              --{ import = "lazyvim.plugins.extras.test.core" },
+              --{ import = "lazyvim.plugins.extras.util.project" },
+              -- The following configs are needed for fixing lazyvim on nix
+              -- force enable telescope-fzf-native.nvim
+              -- { "nvim-telescope/telescope-fzf-native.nvim", enabled = true },
+              -- disable mason.nvim, use config.extraPackages
+              --{ "williamboman/mason-lspconfig.nvim", enabled = false },
+              --{ "williamboman/mason.nvim", enabled = false },
+              --{ "jaybaby/mason-nvim-dap.nvim", enabled = false },
+              -- uncomment to import/override with your plugins
+              { import = "plugins" },
+              -- put this line at the end of spec to clear ensure_installed
+              {
+                "nvim-treesitter/nvim-treesitter",
+                init = function()
+                  -- Put treesitter path as first entry in rtp
+                  vim.opt.rtp:prepend(vim.g.treesitter_path)
+                end,
+                opts = { auto_install = false, ensure_installed = {} },
+              },
+            },
+            performance = {
+              rtp = {
+                -- Setup correct config path
+                paths = { ${./config} },
+                disabled_plugins = {
+                  "gzip",
+                  "matchit",
+                  "matchparen",
+                  "netrwPlugin",
+                  "tarPlugin",
+                  "tohtml",
+                  "tutor",
+                  "zipPlugin",
+                },
+              },
+            },
+          })
+          EOF
+          '';
+      packages.all.start = [ pkgs.vimPlugins.lazy-nvim ];
+    };
+    withRuby = false;
+    withNodeJs = false;
+    withPython3 = false;
+    vimAlias = true;
+  };
+in
+  #pkgs.neovimBuilder {
+  #  inherit plugins;
+  #
+  #  # packages needed
+  #  extraMakeWrapperArgs = extraMakeWrapperArgsPath + " " + extraMakeWrapperArgsEnvVars;
+  #}
+  #pkgs.writeShellApplication {
+  #  name = "nvim";
+  #  runtimeInputs = [ neovimRuntimeDependencies ];
+  #  text = ''
+  #    ${envVarString} ${neovimWrapped}/bin/nvim "$@"
+  #  '';
+  #}
+  neovimWrapped
