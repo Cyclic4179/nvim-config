@@ -25,12 +25,29 @@ autocmd({ "BufWritePre" }, {
     command = "%s/\\s\\+$//e",
 })
 
--- yaml indentation fix
-autocmd("FileType", {
-    pattern = "yaml",
+--autocmd("BufRead", {
+--    callback = function(ev)
+--        if vim.bo[ev.buf].buftype == "quickfix" then
+--            vim.schedule(function()
+--                vim.cmd([[cclose]])
+--                vim.cmd([[Trouble qflist open]])
+--            end)
+--        end
+--    end,
+--})
+
+autocmd("QuickFixCmdPost", {
     callback = function()
+        vim.cmd([[Trouble qflist open]])
     end,
 })
+
+-- yaml indentation fix
+--autocmd("FileType", {
+--    pattern = "yaml",
+--    callback = function()
+--    end,
+--})
 
 -- i use oil now
 --vim.g.netrw_browse_split = 0
