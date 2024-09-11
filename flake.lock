@@ -34,29 +34,6 @@
         "type": "github"
       }
     },
-    "nix2vim": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1718621825,
-        "narHash": "sha256-bSfjwRgKKpLyjEDPRAF1hlJKc7QDoqopalHwNCB/eAA=",
-        "owner": "gytis-ivaskevicius",
-        "repo": "nix2vim",
-        "rev": "1db11dbf8a4d124e02244fa5c4ff219b672a8e5b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gytis-ivaskevicius",
-        "repo": "nix2vim",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1725534445,
@@ -76,7 +53,6 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "google-styleguide": "google-styleguide",
-        "nix2vim": "nix2vim",
         "nixpkgs": "nixpkgs"
       }
     },

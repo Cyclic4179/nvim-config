@@ -60,6 +60,8 @@ let
   ];
 
   extraPlugins = with pkgs.vimPlugins; [
+    #LazyVim
+
     # theme
     # until nixpkgs has newer rose-pine version
     #rose-pine
@@ -84,8 +86,8 @@ let
 
     telescope-nvim
 
-    #nvim-treesitter
-    nvim-treesitter.withAllGrammars
+    nvim-treesitter
+    #nvim-treesitter.withAllGrammars
     #playground # treesitter playground
     nvim-treesitter-context
     # nvim-treesitter-textobjects # i dont need this
@@ -97,6 +99,7 @@ let
     #  paths = nvim-treesitter.withAllGrammars.dependencies;
     #})
 
+    nvim-autopairs
 
     undotree
 
@@ -113,6 +116,9 @@ let
 
     # netrw replacement
     oil-nvim
+
+    conform-nvim
+    colorizer
 
     # harpoon
     harpoon2
@@ -192,6 +198,14 @@ let
     else
       drv;
 
+  # Link together all treesitter grammars into single derivation
+  # for some reason we need to do this
+  treesitter-parsers = (pkgs.symlinkJoin {
+    name = "nix-treesitter-parsers";
+    paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+  });
+
+
   #envVarString = lib.pipe extraEnvVars [
   #  builtins.attrNames
   #  (builtins.map (name: "${name}=${extraEnvVars.${name}}"))
@@ -213,23 +227,46 @@ let
   #  paths = extraPackages;
   #};
 
+  recCatContent =
+    path:
+    pkgs.lib.pipe path [
+      builtins.readDir
+      (pkgs.lib.mapAttrsToList (
+        name: value:
+        let
+          newp = "${path}/${name}";
+        in
+        if value == "regular" then builtins.readFile newp else recCatContent newp
+      ))
+      (builtins.concatStringsSep "\n")
+    ];
+
+  #trace = t: builtins.trace t t;
+
+  luaInitConfig = recCatContent ./lua/config;
+  lazyUserPluginDir = pkgs.runCommand "lazy-user-plugins" { } ''
+    mkdir -p $out/lua/plugins
+    cp -r ${./lua/plugins}/* $out/lua/plugins/
+  '';
+
   neovimWrapped = pkgs.wrapNeovim pkgs.neovim-unwrapped {
-    extraMakeWrapperArgs = extraMakeWrapperArgsPath + extraMakeWrapperArgsEnvVars;
+    extraMakeWrapperArgs = "${extraMakeWrapperArgsPath} ${extraMakeWrapperArgsEnvVars}";
     configure = {
       customRC = # vim
         ''
           lua<<EOF
           require("lazy").setup({
-            defaults = { lazy = true },
+            --defaults = { lazy = true },
             dev = {
               -- reuse files from pkgs.vimPlugins.*
-              path = vim.g.plugin_path,
+              path = "${pluginPath}",
+              --path = vim.g.plugin_path,
               patterns = { "." },
               -- fallback to download
               fallback = false,
             },
             spec = {
-              { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+              --{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
               --{ import = "lazyvim.plugins.extras.coding.yanky" },
               --{ import = "lazyvim.plugins.extras.dap.core" },
               --{ import = "lazyvim.plugins.extras.lang.clangd" },
@@ -254,7 +291,8 @@ let
                 "nvim-treesitter/nvim-treesitter",
                 init = function()
                   -- Put treesitter path as first entry in rtp
-                  vim.opt.rtp:prepend(vim.g.treesitter_path)
+                  vim.opt.rtp:prepend("${treesitter-parsers}")
+                  --vim.opt.rtp:prepend(vim.g.treesitter_path)
                 end,
                 opts = { auto_install = false, ensure_installed = {} },
               },
@@ -262,7 +300,7 @@ let
             performance = {
               rtp = {
                 -- Setup correct config path
-                paths = { ${./config} },
+                paths = { "${lazyUserPluginDir}" },
                 disabled_plugins = {
                   "gzip",
                   "matchit",
@@ -276,27 +314,29 @@ let
               },
             },
           })
+
+          ${luaInitConfig}
           EOF
-          '';
+        '';
       packages.all.start = [ pkgs.vimPlugins.lazy-nvim ];
     };
     withRuby = false;
     withNodeJs = false;
     withPython3 = false;
-    vimAlias = true;
+    #vimAlias = true;
   };
 in
-  #pkgs.neovimBuilder {
-  #  inherit plugins;
-  #
-  #  # packages needed
-  #  extraMakeWrapperArgs = extraMakeWrapperArgsPath + " " + extraMakeWrapperArgsEnvVars;
-  #}
-  #pkgs.writeShellApplication {
-  #  name = "nvim";
-  #  runtimeInputs = [ neovimRuntimeDependencies ];
-  #  text = ''
-  #    ${envVarString} ${neovimWrapped}/bin/nvim "$@"
-  #  '';
-  #}
-  neovimWrapped
+#pkgs.neovimBuilder {
+#  inherit plugins;
+#
+#  # packages needed
+#  extraMakeWrapperArgs = extraMakeWrapperArgsPath + " " + extraMakeWrapperArgsEnvVars;
+#}
+#pkgs.writeShellApplication {
+#  name = "nvim";
+#  runtimeInputs = [ neovimRuntimeDependencies ];
+#  text = ''
+#    ${envVarString} ${neovimWrapped}/bin/nvim "$@"
+#  '';
+#}
+neovimWrapped

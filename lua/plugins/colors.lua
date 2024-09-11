@@ -49,20 +49,6 @@ return {
             vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 
-
-            -- background set transparent
-            --function ColorMyPencils(color)
-            --    color = color or "rose-pine"
-            --    vim.cmd.colorscheme(color)
-            --
-            --    --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-            --    --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-            --end
-            --
-            --ColorMyPencils()
-
-
-
             -- see https://vi.stackexchange.com/questions/39074/user-borders-around-lsp-floating-windows
             local _border = "rounded" -- none single double rounded solid shadow
 
