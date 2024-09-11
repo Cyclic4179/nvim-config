@@ -29,7 +29,10 @@
           inherit system;
           #overlays = [ nix2vim.overlay ];
         };
-        neovim = import ./build-nvim.nix { inherit pkgs inputs; };
+        neovim = import ./build-nvim.nix {
+          inherit pkgs inputs;
+          lib = pkgs.lib;
+        };
       in
       {
         apps.default = flake-utils.lib.mkApp {
