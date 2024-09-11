@@ -1,38 +1,65 @@
 return {
-    {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        opts = {
-            disable_filetype = { "TelescopePrompt" },
-        },
-    },
     --{
-    --    "nvim-treesitter/nvim-treesitter",
-    --    event = { "BufReadPre", "BufNewFile" },
+    --    "windwp/nvim-autopairs",
+    --    event = "InsertEnter",
     --    opts = {
-    --        highlight = {
-    --            enable = true,
-    --        },
-
-    --        indent = {
-    --            enable = true
-    --        },
-
-    --        --incremental_selection = {
-    --        --    enable = true,
-    --        --    keymaps = {
-    --        --        init_selection = "gnn", -- set to `false` to disable one of the mappings
-    --        --        node_incremental = "grn",
-    --        --        scope_incremental = "grc",
-    --        --        node_decremental = "grm",
-    --        --    },
-    --        --},
+    --        disable_filetype = { "TelescopePrompt" },
     --    },
-    --    config = function ()
-    --        print("loaded treesitter")
-    --    end
     --},
-    --{ "norcalli/nvim-colorizer.lua", config = true },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        --event = { "BufReadPre", "BufNewFile" },
+        --opts = {
+        --    highlight = {
+        --        enable = true,
+        --    },
+
+        --    indent = {
+        --        enable = true
+        --    },
+
+        --    --incremental_selection = {
+        --    --    enable = true,
+        --    --    keymaps = {
+        --    --        init_selection = "gnn", -- set to `false` to disable one of the mappings
+        --    --        node_incremental = "grn",
+        --    --        scope_incremental = "grc",
+        --    --        node_decremental = "grm",
+        --    --    },
+        --    --},
+        --    parser_install_dir = vim.g.TREESITTER_PARSER_PATH,
+        --},
+        config = function()
+            vim.opt.rtp:prepend(vim.g.TREESITTER_PARSER_PATH)
+            require 'nvim-treesitter.configs'.setup {
+                highlight = {
+                    enable = true,
+                },
+
+                indent = {
+                    enable = true
+                },
+
+                --incremental_selection = {
+                --    enable = true,
+                --    keymaps = {
+                --        init_selection = "gnn", -- set to `false` to disable one of the mappings
+                --        node_incremental = "grn",
+                --        scope_incremental = "grc",
+                --        node_decremental = "grm",
+                --    },
+                --},
+                parser_install_dir = vim.g.TREESITTER_PARSER_PATH,
+            }
+        end,
+    },
+    {
+        "norcalli/nvim-colorizer.lua",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            require 'colorizer'.setup()
+        end
+    },
     --{
     --    "stevearc/conform.nvim",
     --    --event = { "BufReadPre", "BufNewFile" },

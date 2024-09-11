@@ -158,7 +158,7 @@ let
     #}
   ];
 
-  extraEnvVars = {
+  globalVars = {
     JAVA_SE_17 = "${pkgs.jdk17}/lib/openjdk";
     # https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
     ECLIPSE_JAVA_GOOGLE_STYLE = "${inputs.google-styleguide}/eclipse-java-google-style.xml";
@@ -182,7 +182,15 @@ let
           };
       in
       "${vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test";
+    # Link together all treesitter grammars into single derivation
+    # for some reason we need to do this
+    TREESITTER_PARSER_PATH = (pkgs.symlinkJoin {
+      name = "nix-treesitter-parsers";
+      paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+    });
   };
+
+  globalVarsString = builtins.concatStringsSep "\n" (lib.mapAttrsToList (name: value: ''let g:${name} = "${value}"'') globalVars);
 
   lib = pkgs.lib;
 
@@ -216,11 +224,11 @@ let
   #);
 
   # paths to executables that should be available when running nvim
-  extraMakeWrapperArgsPath = ''--suffix PATH : "${pkgs.lib.makeBinPath extraPackages}"'';
+  extraMakeWrapperArgsPath = ''--suffix PATH : "${lib.makeBinPath extraPackages}"'';
   # env vars for configuration, probably better done differently :man_shrugging:
-  extraMakeWrapperArgsEnvVars = builtins.concatStringsSep " " (
-    pkgs.lib.mapAttrsToList (name: value: ''--set ${name} ${value}'') extraEnvVars
-  );
+  #extraMakeWrapperArgsEnvVars = builtins.concatStringsSep " " (
+  #  lib.mapAttrsToList (name: value: ''--set ${name} ${value}'') globalVars
+  #);
 
   #neovimRuntimeDependencies = pkgs.symlinkJoin {
   #  name = "neovimRuntimeDependencies";
@@ -229,9 +237,9 @@ let
 
   recCatContent =
     path:
-    pkgs.lib.pipe path [
+    lib.pipe path [
       builtins.readDir
-      (pkgs.lib.mapAttrsToList (
+      (lib.mapAttrsToList (
         name: value:
         let
           newp = "${path}/${name}";
@@ -241,7 +249,7 @@ let
       (builtins.concatStringsSep "\n")
     ];
 
-  #trace = t: builtins.trace t t;
+  trace = t: builtins.trace t t;
 
   luaInitConfig = recCatContent ./lua/config;
   lazyUserPluginDir = pkgs.runCommand "lazy-user-plugins" { } ''
@@ -250,11 +258,17 @@ let
   '';
 
   neovimWrapped = pkgs.wrapNeovim pkgs.neovim-unwrapped {
-    extraMakeWrapperArgs = "${extraMakeWrapperArgsPath} ${extraMakeWrapperArgsEnvVars}";
+    #extraMakeWrapperArgs = "${extraMakeWrapperArgsPath} ${extraMakeWrapperArgsEnvVars}";
+    extraMakeWrapperArgs = extraMakeWrapperArgsPath;
     configure = {
       customRC = # vim
         ''
+          " populate paths to neovim
+          ${globalVarsString}
+
           lua<<EOF
+          ${luaInitConfig}
+
           require("lazy").setup({
             --defaults = { lazy = true },
             dev = {
@@ -287,15 +301,37 @@ let
               -- uncomment to import/override with your plugins
               { import = "plugins" },
               -- put this line at the end of spec to clear ensure_installed
-              {
-                "nvim-treesitter/nvim-treesitter",
-                init = function()
-                  -- Put treesitter path as first entry in rtp
-                  vim.opt.rtp:prepend("${treesitter-parsers}")
-                  --vim.opt.rtp:prepend(vim.g.treesitter_path)
-                end,
-                opts = { auto_install = false, ensure_installed = {} },
-              },
+              --{ dir = "$${trace (toString pkgs.vimPlugins.nvim-treesitter.withAllGrammars)}" },
+              --{
+              --  "nvim-treesitter/nvim-treesitter",
+              --  init = function()
+              --    -- Put treesitter path as first entry in rtp
+              --    --vim.opt.rtp:prepend("$${trace (toString treesitter-parsers)}")
+              --    vim.opt.rtp:prepend("${treesitter-parsers}")
+              --    --require 'nvim-treesitter.configs'.setup {
+              --    --  parser_install_dir = "${treesitter-parsers}",
+              --    --  highlight = {
+              --    --    enable = true,
+              --    --  },
+
+              --    --  indent = {
+              --    --    enable = true
+              --    --  },
+
+              --    --  --incremental_selection = {
+              --    --  --    enable = true,
+              --    --  --    keymaps = {
+              --    --  --        init_selection = "gnn", -- set to `false` to disable one of the mappings
+              --    --  --        node_incremental = "grn",
+              --    --  --        scope_incremental = "grc",
+              --    --  --        node_decremental = "grm",
+              --    --  --    },
+              --    --  --},
+              --    --}
+              --    --vim.opt.rtp:prepend(vim.g.treesitter_path)
+              --  end,
+              --  opts = { auto_install = false, ensure_installed = {} },
+              --},
             },
             performance = {
               rtp = {
@@ -314,8 +350,6 @@ let
               },
             },
           })
-
-          ${luaInitConfig}
           EOF
         '';
       packages.all.start = [ pkgs.vimPlugins.lazy-nvim ];
