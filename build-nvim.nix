@@ -118,7 +118,18 @@ let
     oil-nvim
 
     conform-nvim
-    colorizer
+    # doesnt exist in nixpkgs
+    (pkgs.vimUtils.buildVimPlugin {
+      pname = "nvim-colorizer.lua";
+      version = "2024-05-10";
+      src = pkgs.fetchFromGitHub {
+        owner = "norcalli";
+        repo = "nvim-colorizer.lua";
+        rev = "a065833f35a3a7cc3ef137ac88b5381da2ba302e";
+        sha256 = "sha256-gjO89Sx335PqVgceM9DBfcVozNjovC8KML1OZCRNMGw=";
+      };
+      meta.homepage = "https://github.com/norcalli/nvim-colorizer.lua";
+    })
 
     # harpoon
     harpoon2
