@@ -30,6 +30,7 @@ with pkgs.vimPlugins;
   # trying out ...
   trouble-nvim
 
+  plenary-nvim
   telescope-nvim
 
   nvim-treesitter
@@ -84,19 +85,34 @@ with pkgs.vimPlugins;
   nvim-cmp
   cmp-buffer
   cmp-calc
+  otter-nvim
   cmp-path
   cmp-cmdline
   cmp-nvim-lua
+  (pkgs.vimUtils.buildVimPlugin {
+    pname = "cmp_luasnip_choice";
+    version = "2023-03-06";
+    src = pkgs.fetchFromGitHub {
+      owner = "L3MON4D3";
+      repo = "cmp-luasnip-choice";
+      rev = "4f49232e51c9df379b9daf43f25f7ee6320450f0";
+      sha256 = "sha256-/s1p/WLfrHZHX6fU1p2PUQ0GIocAB4mvhjZ0XUMzkaw=";
+    };
+    meta.homepage = "https://github.com/L3MON4D3/cmp-luasnip-choice";
+  })
+  lspkind-nvim
+
   # lsp
   nvim-lspconfig
   cmp-nvim-lsp
   cmp-nvim-lsp-signature-help
   cmp-nvim-lua
+
   # snippets
   luasnip
   cmp_luasnip
+
   # formatting
-  lspkind-nvim
 
   # debugger
   nvim-dap-ui
