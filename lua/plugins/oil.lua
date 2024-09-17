@@ -1,6 +1,6 @@
 return {
     {
-        'stevearc/oil.nvim',
+        "stevearc/oil.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         keys = {
             {
@@ -24,7 +24,7 @@ return {
                 --natural_order = true, -- this is the default
                 case_insensitive = false,
                 is_always_hidden = function(name, _)
-                    return name == '..'
+                    return name == ".."
                     -- or name == '.git'
                 end,
             },
@@ -48,7 +48,7 @@ return {
                     callback = function()
                         require("oil").open_preview({ vertical = true, split = "botright" })
                     end,
-                    desc = "Preview the entry in vertical split"
+                    desc = "Preview the entry in vertical split",
                 },
                 ["<C-c>"] = "actions.close",
                 ["<C-l>"] = "actions.refresh",
@@ -64,5 +64,5 @@ return {
             -- Set to false to disable all of the above keymaps
             use_default_keymaps = false,
         },
-    }
+    },
 }

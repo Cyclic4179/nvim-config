@@ -7,10 +7,10 @@ return {
         },
         config = function()
             -- Setup language servers.
-            local lspconfig = require('lspconfig')
+            local lspconfig = require("lspconfig")
 
             -- Set up lspconfig.
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
             --require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
@@ -29,8 +29,7 @@ return {
             --    py_path = vim.g.python3_host_prog
             --end
 
-
-            lspconfig.pylsp.setup {
+            lspconfig.pylsp.setup({
                 settings = {
                     pylsp = {
                         plugins = {
@@ -48,7 +47,7 @@ return {
                                 enabled = true,
                                 --overrides = { "--python-executable", py_path, true },
                                 report_progress = true,
-                                live_mode = false
+                                live_mode = false,
                             },
                             -- auto-completion options
                             jedi_completion = { fuzzy = true },
@@ -61,7 +60,7 @@ return {
                     debounce_text_changes = 200,
                 },
                 capabilities = capabilities,
-            }
+            })
 
             --lspconfig.pylsp.setup {
             --    capabilities = capabilities,
@@ -83,7 +82,7 @@ return {
             --    }
             --}
 
-            lspconfig.ocamllsp.setup {}
+            lspconfig.ocamllsp.setup({})
 
             --lspconfig.pyright.setup { capabilities = capabilities }
             --lspconfig.jdtls.setup {
@@ -99,36 +98,36 @@ return {
             --    cmd = { 'java-language-server' }
             --}
 
-            lspconfig.tsserver.setup { capabilities = capabilities }
-            lspconfig.rust_analyzer.setup {
+            lspconfig.tsserver.setup({ capabilities = capabilities })
+            lspconfig.rust_analyzer.setup({
                 capabilities = capabilities,
                 -- Server-specific settings. See `:help lspconfig-setup`
                 settings = {
-                    ['rust-analyzer'] = {},
-                }
-            }
-            lspconfig.nil_ls.setup {
+                    ["rust-analyzer"] = {},
+                },
+            })
+            lspconfig.nil_ls.setup({
                 capabilities = capabilities,
-                autostart = true
-            }
-            lspconfig.clangd.setup { capabilities = capabilities }
-            lspconfig.dockerls.setup { capabilities = capabilities }
-            lspconfig.texlab.setup { capabilities = capabilities }
+                autostart = true,
+            })
+            lspconfig.clangd.setup({ capabilities = capabilities })
+            lspconfig.dockerls.setup({ capabilities = capabilities })
+            lspconfig.texlab.setup({ capabilities = capabilities })
             --lspconfig.pylsp.setup { capabilities = capabilities }
-            lspconfig.lua_ls.setup {
+            lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 settings = {
                     Lua = {
                         runtime = {
                             -- Tell the language server which version of Lua you're using
                             -- (most likely LuaJIT in the case of Neovim)
-                            version = 'LuaJIT',
+                            version = "LuaJIT",
                         },
                         diagnostics = {
                             -- Get the language server to recognize the `vim` global
                             globals = {
-                                'vim',
-                                'require'
+                                "vim",
+                                "require",
                             },
                         },
                         workspace = {
@@ -141,8 +140,8 @@ return {
                         },
                     },
                 },
-            }
-            lspconfig.gopls.setup {
+            })
+            lspconfig.gopls.setup({
                 -- for postfix snippets and analyzers
                 capabilities = capabilities,
                 settings = {
@@ -155,8 +154,7 @@ return {
                         staticcheck = true,
                     },
                 },
-            }
-
+            })
 
             local signs = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
             for type, icon in pairs(signs) do
@@ -165,7 +163,7 @@ return {
             end
 
             vim.diagnostic.config({
-                virtual_text = true
+                virtual_text = true,
             })
         end,
     },

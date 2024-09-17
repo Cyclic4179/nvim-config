@@ -1,13 +1,13 @@
 return {
     {
-        'tzachar/local-highlight.nvim',
+        "tzachar/local-highlight.nvim",
         event = { "BufRead" },
         opts = {
             --hlgroup = "Search",
         },
-        init = function ()
+        init = function()
             vim.g.updatetime = 300
-        end
+        end,
     },
     --{
     --    "windwp/nvim-autopairs",

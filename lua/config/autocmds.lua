@@ -1,21 +1,22 @@
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-local pierre_group = augroup('Pierre', {})
-local yank_group = augroup('HighlightYank', {})
+local pierre_group = augroup("Pierre", {})
+local yank_group = augroup("HighlightYank", {})
 
 -- yank highlight
-autocmd('TextYankPost', {
+autocmd("TextYankPost", {
     group = yank_group,
-    pattern = '*',
+    pattern = "*",
     callback = function()
         vim.highlight.on_yank({
-            higroup = 'IncSearch',
+            higroup = "IncSearch",
             timeout = 40,
         })
     end,
 })
 
+-- trim spaces
 autocmd({ "BufWritePre" }, {
     group = pierre_group,
     pattern = "*",
@@ -40,24 +41,24 @@ autocmd("QuickFixCmdPost", {
     end,
 })
 
-
-autocmd('LspAttach', {
+-- lsp keybinds
+autocmd("LspAttach", {
     group = pierre_group,
     callback = function(e)
         local opts = { buffer = e.buf }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
-        vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+        vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+        vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
 
-        vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
-        vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-        vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-        vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+        vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+        vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+        vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
         -- not used
         -- vim.keymap.set({ 'i', 'n' }, '<C-k>', vim.lsp.buf.signature_help, opts)
@@ -74,10 +75,10 @@ autocmd('LspAttach', {
         -- vim.keymap.set('n', '<leader>f', function()
         --     vim.lsp.buf.format { async = true }
         -- end, opts)
-    end
+    end,
 })
 
-
+-- ft autocmds
 autocmd("FileType", {
     pattern = "makefile",
     group = pierre_group,

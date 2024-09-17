@@ -7,7 +7,7 @@ return {
             {
                 "<leader>f",
                 function()
-                    require 'conform'.format({
+                    require("conform").format({
                         lsp_fallback = true,
                         async = true,
                         timeout_ms = 500,

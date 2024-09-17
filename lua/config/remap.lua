@@ -33,14 +33,12 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-
-vim.keymap.set('n', '[c', '<CMD>:cnext<CR>')
-vim.keymap.set('n', ']c', '<CMD>:cprev<CR>')
+vim.keymap.set("n", "[c", "<CMD>:cnext<CR>")
+vim.keymap.set("n", "]c", "<CMD>:cprev<CR>")
 
 -- maybe sometime
 --vim.keymap.set('n', '[l', '<CMD>:lnext<CR>')
 --vim.keymap.set('n', ']l', '<CMD>:lprev<CR>')
-
 
 -- trying this out: (this sucks)
 --vim.keymap.set("n", "<leader>h", "<cmd>set hlsearch!<cr>")
@@ -50,4 +48,3 @@ vim.keymap.set('n', ']c', '<CMD>:cprev<CR>')
 --vim.keymap.set("n", "<leader><leader>", function()
 --    vim.cmd("so")
 --end)
-

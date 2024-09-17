@@ -3,9 +3,9 @@ return {
         "nvim-treesitter/nvim-treesitter-context",
         event = { "BufReadPre", "BufNewFile" },
         config = function()
-            require 'treesitter-context'.setup {
+            require("treesitter-context").setup({
                 max_lines = 5,
-            }
+            })
             vim.cmd([[
                 hi TreesitterContext guibg=#26233A
                 hi TreesitterContextLineNumber guibg=#26233A
@@ -38,13 +38,13 @@ return {
         --lazy = false,
         config = function()
             vim.opt.rtp:prepend(vim.g.TREESITTER_PARSER_PATH)
-            require 'nvim-treesitter.configs'.setup {
+            require("nvim-treesitter.configs").setup({
                 highlight = {
                     enable = true,
                 },
 
                 indent = {
-                    enable = true
+                    enable = true,
                 },
 
                 --incremental_selection = {
@@ -57,7 +57,7 @@ return {
                 --    },
                 --},
                 parser_install_dir = vim.g.TREESITTER_PARSER_PATH,
-            }
+            })
         end,
     },
 }

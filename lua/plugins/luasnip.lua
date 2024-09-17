@@ -7,8 +7,9 @@ return {
         lazy = true,
 
         config = function()
-            vim.keymap.set("i", "<C-J>", function() require 'luasnip'.jump(1) end, { silent = true })
-
+            vim.keymap.set("i", "<C-J>", function()
+                require("luasnip").jump(1)
+            end, { silent = true })
 
             --local ls = require("luasnip")
             --ls.filetype_extend("javascript", { "jsdoc" })
@@ -80,7 +81,6 @@ return {
             --    })
             --  }
             --})
-
         end,
-    }
+    },
 }
