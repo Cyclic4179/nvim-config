@@ -6,6 +6,8 @@
 
 with pkgs;
 [
+  nixfmt-rfc-style
+
   # search
   ripgrep
   fd # suggested by telescope-nvim heathcheck

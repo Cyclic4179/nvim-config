@@ -9,7 +9,7 @@ return {
                 desc = "Open parent directory",
             },
         },
-        --lazy = false,
+        lazy = false,
         ---@module 'oil'
         ---@type oil.SetupOpts
         opts = {

@@ -1,11 +1,10 @@
 return {
     {
         'tzachar/local-highlight.nvim',
-        config = function()
-            require('local-highlight').setup({
-                --hlgroup = "Search",
-            })
-        end,
+        event = { "BufRead" },
+        opts = {
+            --hlgroup = "Search",
+        },
         init = function ()
             vim.g.updatetime = 300
         end
