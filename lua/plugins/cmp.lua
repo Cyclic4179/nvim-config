@@ -34,11 +34,11 @@ return {
             "L3MON4D3/cmp-luasnip-choice",
 
             "hrsh7th/cmp-nvim-lua",
-            "hrsh7th/cmp-nvim-lsp",
+            --"hrsh7th/cmp-nvim-lsp", -- not actually needed
             "hrsh7th/cmp-nvim-lsp-signature-help",
 
             "hrsh7th/cmp-path",
-            -- "FelipeLema/cmp-async-path",
+            -- "FelipeLema/cmp-async-path", -- might replace cmp-path
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-calc",
 
@@ -99,7 +99,7 @@ return {
                     { name = 'luasnip' },
                 }, {
                     { name = 'async_path' },
-                    { name = 'buffer',    keyword_length = 5 },
+                    { name = 'buffer',    keyword_length = 4 },
                 }),
 
                 formatting = {

@@ -10,7 +10,11 @@ return {
                 styles = { italic = false, transparency = true },
                 --dim_inactive_windows = true,
                 highlight_groups = {
-                    Search = { bg = "#35314f", fg = "NONE", },
+                    -- used by local-highlight.nvim
+                    -- see https://coolors.co/gradient-palette/293342-1f1d2e?number=10 and https://coolors.co/393555 and https://coolors.co/1f1d2e
+                    -- other color options are: #241D28, #1F1D2E, #35314F
+                    LocalHighlight = { bg = "#232737", fg = "NONE", },
+
                     DapBreakpoint = { fg = "red" },
                     DapBreakpointCondition = { fg = "yellow" },
                     DapLogPoint = { fg = "iris" },
@@ -22,18 +26,16 @@ return {
                     main = {
                         -- default text color is too bright for me
                         -- see https://coolors.co/gradient-palette/b3b1ad-e0def4?number=10
-                        --text = "#B3B1AD",
-                        --text = "#BDBBBD",
+                        -- other options are: #B3B1AD, #BDBBBD, #CCCAD4
                         text = "#D1CFDC",
-                        --text = "#CCCAD4",
                     },
                 },
             }
 
             vim.cmd.colorscheme("rose-pine")
-            vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-            vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-            vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+            vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+            vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
+            vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
         end
     },
 }

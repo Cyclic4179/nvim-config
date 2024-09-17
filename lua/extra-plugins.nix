@@ -9,7 +9,7 @@ with pkgs.vimPlugins;
   #LazyVim
 
   # theme
-  # until nixpkgs has newer rose-pine version
+  # until nixpkgs has newer rose-pine version (needed for customizing text color)
   #rose-pine
   (pkgs.vimUtils.buildVimPlugin {
     pname = "rose-pine";
@@ -29,6 +29,18 @@ with pkgs.vimPlugins;
 
   # trying out ...
   trouble-nvim
+  (pkgs.vimUtils.buildVimPlugin {
+    pname = "local-highlight.nvim";
+    version = "2024-04-20";
+    src = pkgs.fetchFromGitHub {
+      owner = "tzachar";
+      repo = "local-highlight.nvim";
+      rev = "ae3ada3a332128b1036c84c8587b9069891c63da";
+      sha256 = "sha256-JeTZrf1O3bAtrL857Khiqij8qSZfKp7lzAmnuxXREnE=";
+    };
+    meta.homepage = "https://github.com/tzachar/local-highlight.nvim";
+  })
+
 
   plenary-nvim
   telescope-nvim

@@ -1,4 +1,15 @@
 return {
+    {
+        'tzachar/local-highlight.nvim',
+        config = function()
+            require('local-highlight').setup({
+                --hlgroup = "Search",
+            })
+        end,
+        init = function ()
+            vim.g.updatetime = 300
+        end
+    },
     --{
     --    "windwp/nvim-autopairs",
     --    event = "InsertEnter",
@@ -15,45 +26,8 @@ return {
     --    --    require 'colorizer'.setup({ lowercase = true, })
     --    --end
     --},
-    --{
-    --    "stevearc/conform.nvim",
-    --    --event = { "BufReadPre", "BufNewFile" },
-    --    keys = {
-    --        "<leader>f",
-    --        function()
-    --            require 'conform'.format({
-    --                lsp_fallback = true,
-    --                async = true,
-    --                timeout_ms = 500,
-    --            })
-    --        end,
-    --        { "n", "v" },
-    --        desc = "Format file or range (in visual mode)",
-    --    },
-    --    opts = {
-    --        formatters_by_ft = {
-    --            lua = { "stylua" },
-    --            svelte = { { "prettierd", "prettier" } },
-    --            javascript = { { "prettierd", "prettier" } },
-    --            typescript = { { "prettierd", "prettier" } },
-    --            javascriptreact = { { "prettierd", "prettier" } },
-    --            typescriptreact = { { "prettierd", "prettier" } },
-    --            json = { { "prettierd", "prettier" } },
-    --            graphql = { { "prettierd", "prettier" } },
-    --            java = { "google-java-format" },
-    --            kotlin = { "ktlint" },
-    --            ruby = { "standardrb" },
-    --            markdown = { { "prettierd", "prettier" } },
-    --            erb = { "htmlbeautifier" },
-    --            html = { "htmlbeautifier" },
-    --            bash = { "beautysh" },
-    --            proto = { "buf" },
-    --            rust = { "rustfmt" },
-    --            yaml = { "yamlfix" },
-    --            toml = { "taplo" },
-    --            css = { { "prettierd", "prettier" } },
-    --            scss = { { "prettierd", "prettier" } },
-    --        },
-    --    },
-    --}
+    -- TODO: luasnippets (see https://github.com/L3MON4D3/Dotfiles/blob/master/.config/nvim/lua/plugins/luasnip/init.lua)
+    -- TODO: dap
+    -- TODO: java lsp
+    -- TODO: word under cursor highlighting
 }
