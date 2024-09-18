@@ -7,6 +7,7 @@
 with pkgs;
 [
   nixfmt-rfc-style
+  stylua
 
   # search
   ripgrep
