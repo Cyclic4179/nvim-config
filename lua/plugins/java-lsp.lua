@@ -5,11 +5,10 @@ local debug_java = function()
     else
         -- stylua: ignore
         local choices = {
-            { label = "main class", action = function() require("jdtls.dap").setup_dap_main_class_configs() end, },
-            { label = "junit test class", action = function() require("jdtls.dap").test_class() end, },
+            { label = "main class",           action = function() require("jdtls.dap").setup_dap_main_class_configs() end, },
+            { label = "junit test class",     action = function() require("jdtls.dap").test_class() end, },
             { label = "junit nearest method", action = function() require("jdtls.dap").test_nearest_method() end, },
-            { label = "pick test", action = function() require("jdtls.dap").pick_test() end, },
-            { label = "do nothing", action = function() end, }
+            { label = "pick test",            action = function() require("jdtls.dap").pick_test() end, },
         }
         vim.ui.select(choices, {
             prompt = "Choose what to debug (if available):",
@@ -19,16 +18,21 @@ local debug_java = function()
         }, function(choice)
             if (choice or {}).action then
                 choice.action()
-                for _ = 1, 10, 1 do
-                    if dap.session() == nil then -- if action already spawns debug session dont dap.continue()
-                        print("... still not ready")
-                        dap.continue()
-                    else
-                        print("session begun")
-                        break
+
+                local nio = require("nio")
+                nio.run(function()
+                    for _ = 1, 10, 1 do
+                        nio.sleep(500)
+
+                        if dap.session() == nil then -- if action already spawns debug session dont dap.continue()
+                            dap.continue()
+                            print("... still not ready")
+                        else
+                            print("debugger ready")
+                            break
+                        end
                     end
-                    vim.wait(200)
-                end
+                end)
             end
         end)
     end
@@ -152,3 +156,60 @@ return {
         end,
     },
 }
+
+-- local a = vim.opt.cmdheight
+-- vim.opt.cmdheight = 10
+--
+-- for _ = 1, 5, 1 do
+--     if dap.session() == nil then -- if action already spawns debug session dont dap.continue()
+--         dap.continue()
+--         require("dap.utils").notify("... still not ready")
+--         --vim.cmd([[set showcmd!]])
+--         --local dap = require("dap")
+--         --dap.continue()
+--         ----vim.cmd([[set cmdheight=10]])
+--         --local a = vim.opt.cmdheight
+--
+--         local nio = require("nio")
+--         nio.run(function()
+--             --local value = nio.ui.input({ prompt = "Enter something: " })
+--             --print(("You entered: %s"):format(value))
+--            nio.sleep(1000)
+--         end)
+--
+--         local timer = vim.uv.new_timer()
+--
+--         local timer = vim.uv.new_timer()
+--         local i = 0
+--         timer:start(
+--             500,
+--             5,
+--             vim.schedule_wrap(function()
+--                 vim.api.nvim_command('echomsg "test ' .. i .. '"')
+--                 i = i + 1
+--             end)
+--         )
+--         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
+--         --vim.cmd([[normal :]])
+--         vim.wait(1000)
+--         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
+--         vim.wait(1000)
+--         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
+--         --vim.opt.cmdheight = a
+--         ----vim.cmd([[set cmdheight=1]])
+--         ----vim.cmd([[set showcmd!]])
+--         --vim.nvim_echo("... still not ready", false, {})
+--         --vim.nvim_echo("... still not ready", false, {})
+--         --vim.cmd([[normal ]])
+--         --vim.print("... still not ready")
+--         --local key = vim.nvim_replace_termcodes("<ESC>", true, false, true)
+--         --vim.nvim_feedkeys(key)
+--     else
+--         require("dap.utils").notify("session ready")
+--         break
+--     end
+-- end
+--
+-- vim.opt.cmdheight = a
+--
+-- vim.opt.cmdheight = a
