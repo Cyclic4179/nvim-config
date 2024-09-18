@@ -41,6 +41,10 @@ end
 return {
     {
         "mfussenegger/nvim-jdtls",
+        dependencies = {
+            "nvim-neotest/nvim-nio", -- used for async start of debugger
+            "mfussenegger/nvim-dap", -- needed for debugger
+        },
         ft = "java",
         config = function()
             local home = vim.fn.getenv("HOME")
@@ -156,60 +160,3 @@ return {
         end,
     },
 }
-
--- local a = vim.opt.cmdheight
--- vim.opt.cmdheight = 10
---
--- for _ = 1, 5, 1 do
---     if dap.session() == nil then -- if action already spawns debug session dont dap.continue()
---         dap.continue()
---         require("dap.utils").notify("... still not ready")
---         --vim.cmd([[set showcmd!]])
---         --local dap = require("dap")
---         --dap.continue()
---         ----vim.cmd([[set cmdheight=10]])
---         --local a = vim.opt.cmdheight
---
---         local nio = require("nio")
---         nio.run(function()
---             --local value = nio.ui.input({ prompt = "Enter something: " })
---             --print(("You entered: %s"):format(value))
---            nio.sleep(1000)
---         end)
---
---         local timer = vim.uv.new_timer()
---
---         local timer = vim.uv.new_timer()
---         local i = 0
---         timer:start(
---             500,
---             5,
---             vim.schedule_wrap(function()
---                 vim.api.nvim_command('echomsg "test ' .. i .. '"')
---                 i = i + 1
---             end)
---         )
---         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
---         --vim.cmd([[normal :]])
---         vim.wait(1000)
---         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
---         vim.wait(1000)
---         vim.api.nvim_echo({ { "... still not ready" } }, false, {})
---         --vim.opt.cmdheight = a
---         ----vim.cmd([[set cmdheight=1]])
---         ----vim.cmd([[set showcmd!]])
---         --vim.nvim_echo("... still not ready", false, {})
---         --vim.nvim_echo("... still not ready", false, {})
---         --vim.cmd([[normal ]])
---         --vim.print("... still not ready")
---         --local key = vim.nvim_replace_termcodes("<ESC>", true, false, true)
---         --vim.nvim_feedkeys(key)
---     else
---         require("dap.utils").notify("session ready")
---         break
---     end
--- end
---
--- vim.opt.cmdheight = a
---
--- vim.opt.cmdheight = a
