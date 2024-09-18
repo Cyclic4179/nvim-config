@@ -1,4 +1,58 @@
+-- Run last: https://github.com/mfussenegger/nvim-dap/issues/1025
+local last_config = nil
+
+-- instead of require('dap').run_last()
+local function debug_run_last()
+    local dap = require("dap")
+    if last_config then
+        dap.run(last_config)
+    else
+        dap.continue()
+    end
+end
+
+---@param config {args?:string[]|fun():string[]?}
+local function get_args(config)
+    local args = type(config.args) == "function" and (config.args() or {}) or config.args or {}
+    config = vim.deepcopy(config)
+    ---@cast args string[]
+    config.args = function()
+        local new_args = vim.fn.input("Run with args: ", table.concat(args, " ")) --[[@as string]]
+        return vim.split(vim.fn.expand(new_args), " ")
+    end
+    return config
+end
+
 return {
+    -- fancy UI for the debugger
+    {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+        -- stylua: ignore
+        keys = {
+          { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
+          { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
+        },
+        opts = {},
+        config = function(_, opts)
+            local dap = require("dap")
+            local dapui = require("dapui")
+
+            dapui.setup(opts)
+
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                dapui.open({})
+            end
+            -- i like to close em myself
+            --dap.listeners.before.event_terminated["dapui_config"] = function()
+            --    dapui.close({})
+            --end
+            --dap.listeners.before.event_exited["dapui_config"] = function()
+            --    dapui.close({})
+            --end
+        end,
+    },
+
     {
         "mfussenegger/nvim-dap",
         recommended = true,
@@ -13,38 +67,48 @@ return {
             },
         },
 
-            -- stylua: ignore
-            keys = {
-                { "<leader>d", "", desc = "+debug", mode = {"n", "v"} },
-                { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
-                { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-                { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
-                { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
-                { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
-                { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
-                { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
-                { "<leader>dj", function() require("dap").down() end, desc = "Down" },
-                { "<leader>dk", function() require("dap").up() end, desc = "Up" },
-                { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
-                { "<leader>do", function() require("dap").step_out() end, desc = "Step Out" },
-                { "<leader>dO", function() require("dap").step_over() end, desc = "Step Over" },
-                { "<leader>dp", function() require("dap").pause() end, desc = "Pause" },
-                { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
-                { "<leader>ds", function() require("dap").session() end, desc = "Session" },
-                { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
-                { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
-            },
+        -- stylua: ignore
+        keys = {
+            -- old config
+            --{ "<leader>dt", function() require("dapui").toggle() end },
+            { "<leader>ds", function() require("dapui").open({ reset = true }) end },
+            --{ "<Leader>df", function() require("dap").focus_frame() end },
+            { "<leader>dl", debug_run_last, desc = "Run Last" },
+            --{ "<F5>", function() require("dap").continue() end },
+            --{ "<F10>", function() require("dap").step_over() end },
+            --{ "<F11>", function() require("dap").step_into() end },
+            --{ "<F12>", function() require("dap").step_out() end },
+            --{ "<Leader>b", function() require("dap").toggle_breakpoint() end },
+            --{ "<Leader>B", function() require("dap").set_breakpoint() end },
+            --{ "<Leader>lp", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end },
+            { "<Leader>dm", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end, desc = "Log point message" },
+            --{ "<Leader>dr", function() require("dap").repl.open() end },
+
+            -- config from lazyvim
+            { "<leader>d", "", desc = "+debug", mode = {"n", "v"} },
+            { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Breakpoint Condition" },
+            { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+            { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
+            --{ "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
+            { "<leader>dl", debug_run_last, desc = "Run Last" },
+            { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
+            { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
+            { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
+            { "<leader>dj", function() require("dap").down() end, desc = "Down" },
+            { "<leader>dk", function() require("dap").up() end, desc = "Up" },
+            { "<leader>do", function() require("dap").step_out() end, desc = "Step Out" },
+            { "<leader>dn", function() require("dap").step_over() end, desc = "Step Over" }, -- changed from "<leader>dO" to "<leader>dn"
+            { "<leader>dp", function() require("dap").pause() end, desc = "Pause" },
+            { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+            --{ "<leader>ds", function() require("dap").session() end, desc = "Session" },
+            { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
+            --{ "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
+            { "<Leader>df", function() require("dap").focus_frame() end, desc = "Focus executing line" },
+        },
 
         config = function()
             local dap = require("dap")
-            local dapui = require("dapui")
-            require("nvim-dap-virtual-text").setup({})
-            dapui.setup()
 
-            --vim.fn.sign_define('DapBreakpoint', { text='🔴', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
-            --vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#555530" })
-            --vim.api.nvim_set_hl(0, "DapStopped", { bg = "#474656" })
-            --vim.fn.sign_define("DapStopped", { text = "→", texthl = "Error", linehl = "DapStoppedLinehl", numhl = "" })
             local sign = vim.fn.sign_define
 
             sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
@@ -52,61 +116,10 @@ return {
             sign("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = "" })
             sign("DapStopped", { text = "→", texthl = "DapStoppedSign", linehl = "DapStopped", numhl = "DapStopped" })
 
-            vim.keymap.set("n", "<leader>dt", function()
-                require("dapui").toggle()
-            end)
-            --vim.keymap.set("n", "<leader>db", ":DapToggleBreakpoint<CR>")
-            --vim.keymap.set("n", "<leader>dc", ":DapContinue<CR>")
-            vim.keymap.set("n", "<leader>ds", function()
-                require("dapui").open({ reset = true })
-            end)
-
-            vim.keymap.set("n", "<Leader>df", function()
-                require("dap").focus_frame()
-            end)
-            vim.keymap.set("n", "<F5>", function()
-                require("dap").continue()
-            end)
-            vim.keymap.set("n", "<F10>", function()
-                require("dap").step_over()
-            end)
-            vim.keymap.set("n", "<F11>", function()
-                require("dap").step_into()
-            end)
-            vim.keymap.set("n", "<F12>", function()
-                require("dap").step_out()
-            end)
-            vim.keymap.set("n", "<Leader>b", function()
-                require("dap").toggle_breakpoint()
-            end)
-            vim.keymap.set("n", "<Leader>B", function()
-                require("dap").set_breakpoint()
-            end)
-            vim.keymap.set("n", "<Leader>lp", function()
-                require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-            end)
-            vim.keymap.set("n", "<Leader>dr", function()
-                require("dap").repl.open()
-            end)
-            --vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
-
             -- Run last: https://github.com/mfussenegger/nvim-dap/issues/1025
-            local last_config = nil
             dap.listeners.after.event_initialized["store_config"] = function(session)
                 last_config = session.config
             end
-
-            local function debug_run_last()
-                if last_config then
-                    dap.run(last_config)
-                else
-                    dap.continue()
-                end
-            end
-
-            vim.keymap.set("n", "<Leader>dl", function()
-                debug_run_last()
-            end)
 
             --vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
             --  require('dap.ui.widgets').hover()
@@ -123,16 +136,6 @@ return {
             --  widgets.centered_float(widgets.scopes)
             --end)
 
-            dap.listeners.after.event_initialized["dapui_config"] = function()
-                dapui.open()
-            end
-            --dap.listeners.before.event_terminated["dapui_config"]=function()
-            --  dapui.close()
-            --end
-            --dap.listeners.before.event_exited["dapui_config"]=function()
-            --  dapui.close()
-            --end
-
             -- c, see https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(gdb-via--vscode-cpptools)
             dap.adapters.gdb = {
                 type = "executable",
@@ -144,14 +147,6 @@ return {
                     final_config.args = final_config.args or final_config[2]
                     on_config(final_config)
                 end,
-                -- seems to have no effect
-                --setupCommands = {
-                --    {
-                --        text = '-enable-pretty-printing',
-                --        description = 'enable pretty printing',
-                --        ignoreFailures = false
-                --    },
-                --},
             }
 
             -- maybe ref: https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
@@ -187,10 +182,6 @@ return {
                         end)
                     end,
                     function()
-                        --print(vim.inspect(vim.tbl_map(function(value)
-                        --    return string.gsub(value, '\\ ', ' ')
-                        --end, vim.split("a\\ a b", ' ', { trimempty = true }))))
-
                         -- TODO: until now, only escaping ' ' with '\ ' is supported, everything else will remain
                         -- unchanged when passed to application (eg single or double quotes must be removed)
                         -- (this wont be splitted and the backspace will be removed: '\ ' -> ' ')
@@ -210,14 +201,9 @@ return {
                             end
                         end
 
-                        print("using args: " .. vim.inspect(args))
+                        vim.print("using args: " .. vim.inspect(args))
 
                         return args
-                        --print(vim.inspect(args))
-                        --print(vim.inspect(vim.tbl_map(function(value)
-                        --    return string.gsub(value, '\\ ', ' ')
-                        --end, vim.split("a\\ a b", ' ', { trimempty = true }))))
-                        --return print(vim.inspect(vim.split(vim.fn.input('Arguments (sep: \' \', \'\\ \' -> \' \'): ', '', 'file'), '\\ ', { trimempty = true })))
                     end,
                     name = "Launch",
                     type = "gdb",
@@ -230,85 +216,7 @@ return {
             dap.configurations.rust = dap.configurations.c
 
             -- go
-            require("dap-go").setup()
-
-            --local s = "test \"nice\\ \""
-            --local x = vim.split(s, " ", { trimempty = true })
-            --
-            --local function a()
-            --  for y in vim.gsplit(s, ' ', { trimempty = true }) do
-            --    print(y)
-            --  end
-            --end
-            --
-            --t = {}
-            --s = "from=world, to=Lua"
-            --for k, v in string.gmatch(s, "(%w+)=(%w+)") do
-            --  t[k] = v
-            --end
-            --print(vim.inspect(t))
-            --
-            ----a()
-            --
-            --print(vim.inspect(x))
-
-            --        program = function()
-            --            return coroutine.create(function(dap_run_co)
-            --                local pickers = require("telescope.pickers")
-            --                local finders = require("telescope.finders")
-            --                local conf = require("telescope.config").values
-            --                local actions = require("telescope.actions")
-            --                local action_state = require("telescope.actions.state")
-            --                pickers.new({}, {
-            --                    prompt_title = "Path to executable",
-            --                    finder = finders.new_oneshot_job(
-            --                        { "fd", "--hidden", "--exclude", ".git", "--no-ignore", "--type", "x", "--color", "never" },
-            --                        {}
-            --                    ),
-            --                    sorter = conf.generic_sorter({}),
-            --                    attach_mappings = function(buffer_number)
-            --                        actions.select_default:replace(function()
-            --                            actions.close(buffer_number)
-            --                            coroutine.resume(dap_run_co, action_state.get_selected_entry()[1])
-            --                        end)
-            --                        return true
-            --                    end,
-            --                }):find()
-            --            end)
-            --        end,
-
-            --dap.adapters.cppdbg = {
-            --  id = 'cppdbg',
-            --  type = 'executable',
-            --  command = '/nix/store/m4g769whwylg57gycqccl5jq2avcpkdd-vscode-extension-ms-vscode-cpptools-1.17.3/share/vscode/extension/debugAdapters/bin/OpenDebugAD7',
-            --}
-            --dap.configurations.cpp = {
-            --  {
-            --    name = "Launch file",
-            --    type = "cppdbg",
-            --    request = "launch",
-            --    program = function()
-            --      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            --    end,
-            --    cwd = '${workspaceFolder}',
-            --    stopAtEntry = true,
-            --  },
-            --  {
-            --    name = 'Attach to gdbserver :1234',
-            --    type = 'cppdbg',
-            --    request = 'launch',
-            --    MIMode = 'gdb',
-            --    miDebuggerServerAddress = 'localhost:1234',
-            --    miDebuggerPath = '/usr/bin/gdb',
-            --    cwd = '${workspaceFolder}',
-            --    program = function()
-            --      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            --    end,
-            --  },
-            --}
-            --
-            --dap.configurations.c = dap.configurations.cpp
-            --dap.configurations.rust = dap.configurations.cpp
+            --require("dap-go").setup()
         end,
     },
 }
