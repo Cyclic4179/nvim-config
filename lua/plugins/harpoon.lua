@@ -9,14 +9,8 @@ return {
 
         --    harpoon:setup()
         --end,
+        -- stylua: ignore
         keys = {
-            {
-                "<leader>a",
-                function()
-                    require("harpoon"):list():add()
-                end,
-                desc = "Add to require 'harpoon' list",
-            },
             {
                 "<C-e>",
                 function()
@@ -25,62 +19,15 @@ return {
                 end,
                 desc = "Edit require 'harpoon' list",
             },
-            {
-                "<C-h>",
-                function()
-                    require("harpoon"):list():select(1)
-                end,
-                desc = "",
-            },
-            {
-                "<C-t>",
-                function()
-                    require("harpoon"):list():select(2)
-                end,
-                desc = "",
-            },
-            {
-                "<C-n>",
-                function()
-                    require("harpoon"):list():select(3)
-                end,
-                desc = "",
-            },
-            {
-                "<C-s>",
-                function()
-                    require("harpoon"):list():select(4)
-                end,
-                desc = "",
-            },
-            {
-                "<leader><C-h>",
-                function()
-                    require("harpoon"):list():replace_at(1)
-                end,
-                desc = "",
-            },
-            {
-                "<leader><C-t>",
-                function()
-                    require("harpoon"):list():replace_at(2)
-                end,
-                desc = "",
-            },
-            {
-                "<leader><C-n>",
-                function()
-                    require("harpoon"):list():replace_at(3)
-                end,
-                desc = "",
-            },
-            {
-                "<leader><C-s>",
-                function()
-                    require("harpoon"):list():replace_at(4)
-                end,
-                desc = "",
-            },
+            { "<leader>a",     function() require("harpoon"):list():add() end,         desc = "Add to require 'harpoon' list", },
+            { "<C-h>",         function() require("harpoon"):list():select(1) end,     desc = "Select 1", },
+            { "<C-t>",         function() require("harpoon"):list():select(2) end,     desc = "Select 2", },
+            { "<C-n>",         function() require("harpoon"):list():select(3) end,     desc = "Select 3", },
+            { "<C-s>",         function() require("harpoon"):list():select(4) end,     desc = "Select 4", },
+            { "<leader><C-h>", function() require("harpoon"):list():replace_at(1) end, desc = "Replace 1", },
+            { "<leader><C-t>", function() require("harpoon"):list():replace_at(2) end, desc = "Replace 2", },
+            { "<leader><C-n>", function() require("harpoon"):list():replace_at(3) end, desc = "Replace 3", },
+            { "<leader><C-s>", function() require("harpoon"):list():replace_at(4) end, desc = "Replace 4", },
         },
     },
 }

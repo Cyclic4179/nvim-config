@@ -1,3 +1,39 @@
+local debug_java = function()
+    local dap = require("dap")
+    if dap.session() ~= nil then
+        dap.continue()
+    else
+        -- stylua: ignore
+        local choices = {
+            { label = "main class", action = function() require("jdtls.dap").setup_dap_main_class_configs() end, },
+            { label = "junit test class", action = function() require("jdtls.dap").test_class() end, },
+            { label = "junit nearest method", action = function() require("jdtls.dap").test_nearest_method() end, },
+            { label = "pick test", action = function() require("jdtls.dap").pick_test() end, },
+            { label = "do nothing", action = function() end, }
+        }
+        vim.ui.select(choices, {
+            prompt = "Choose what to debug (if available):",
+            format_item = function(item)
+                return item.label
+            end,
+        }, function(choice)
+            if (choice or {}).action then
+                choice.action()
+                for _ = 1, 10, 1 do
+                    if dap.session() == nil then -- if action already spawns debug session dont dap.continue()
+                        print("... still not ready")
+                        dap.continue()
+                    else
+                        print("session begun")
+                        break
+                    end
+                    vim.wait(200)
+                end
+            end
+        end)
+    end
+end
+
 return {
     {
         "mfussenegger/nvim-jdtls",
@@ -13,39 +49,13 @@ return {
 
             local jdtls = require("jdtls")
 
-            -- The on_attach function is used to set key maps after the language server
-            -- attaches to the current buffer
-            local on_attach = function(client, bufnr)
-                vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-                -- buffer mappings (not just for java), also present in ./lsp.lua
-                local opts = { noremap = true, silent = true, buffer = bufnr }
-                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-                --vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-                vim.keymap.set({ "i", "n" }, "<C-k>", vim.lsp.buf.signature_help, opts)
-                --vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-                --vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-                --vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
-                --vim.keymap.set('n', '<leader>wl', function()
-                --    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                --end, opts)
-                --vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
-                --vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-                --vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-                vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
-                vim.keymap.set("n", "<leader>f", function()
-                    vim.lsp.buf.format({ async = true })
-                end, opts)
-
+            local on_attach = function(_, bufnr)
                 -- Java extensions provided by jdtls
                 --vim.keymap.set('n', '<C-o>', jdtls.organize_imports, opts)
-                vim.keymap.set("n", "<leader>ev", jdtls.extract_variable, opts)
-                vim.keymap.set("n", "<leader>ec", jdtls.extract_constant, opts)
-                vim.keymap.set("v", "<leader>em", jdtls.extract_method, opts)
+                vim.keymap.set("n", "<leader>ev", jdtls.extract_variable, { desc = "extract_variable", buffer = bufnr })
+                vim.keymap.set("n", "<leader>ec", jdtls.extract_constant, { desc = "extract_constant", buffer = bufnr })
+                vim.keymap.set("v", "<leader>em", jdtls.extract_method, { desc = "extract_method", buffer = bufnr })
+                vim.keymap.set("n", "<leader>dc", debug_java, { desc = "Debug opts for java", buffer = bufnr })
             end
 
             -- If you started neovim within `~/dev/xy/project-1` this would resolve to `project-1`
@@ -91,9 +101,6 @@ return {
                         format = {
                             settings = {
                                 -- Use Google Java style guidelines for formatting
-                                -- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
-                                -- and place it in the ~/.local/share/eclipse directory
-                                --url = "/.local/share/eclipse/eclipse-java-google-style.xml",
                                 url = eclipseJavaGoogleStyle,
                                 profile = "GoogleStyle",
                             },

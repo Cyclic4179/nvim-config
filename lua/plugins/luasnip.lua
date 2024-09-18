@@ -7,7 +7,7 @@ return {
         lazy = true,
 
         config = function()
-            vim.keymap.set("i", "<C-J>", function()
+            vim.keymap.set("i", "<C-L>", function()
                 require("luasnip").jump(1)
             end, { silent = true })
 
