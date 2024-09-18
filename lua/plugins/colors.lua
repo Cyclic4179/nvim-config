@@ -20,6 +20,9 @@ return {
                     DapLogPoint = { fg = "iris" },
                     DapStopped = { bg = "#2d2c3f" },
                     DapStoppedSign = { bg = "#2d2c3f", fg = "red" },
+
+                    TreesitterContext = { bg = "#26233A" },
+                    TreesitterContextLineNumber = { bg = "#26233A" },
                 },
                 -- overrides main palette
                 palette = {

@@ -5,21 +5,10 @@ return {
             "nvim-lua/plenary.nvim",
         },
         cmd = "Telescope",
+        -- stylua: ignore
         keys = {
-            {
-                "<leader>pf",
-                function()
-                    require("telescope.builtin").find_files()
-                end,
-                desc = "Telescope find_files",
-            },
-            {
-                "<C-P>",
-                function()
-                    require("telescope.builtin").git_files()
-                end,
-                desc = "Telescope git_files",
-            },
+            { "<leader>pf", function() require("telescope.builtin").find_files() end, desc = "Telescope find_files", },
+            { "<C-P>", function() require("telescope.builtin").git_files() end, desc = "Telescope git_files", },
 
             -- TODO not sure how nice this is
             --local is_inside_work_tree = {}
@@ -40,32 +29,12 @@ return {
             --
             --end)
 
-            {
-                "<leader>ps",
-                function()
-                    require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") })
-                end,
-                desc = "Telescope grep_string",
-            },
-            {
-                "<leader>pt",
-                function()
-                    require("telescope.builtin").grep_string({ search = "TODO" })
-                end,
-                desc = "Telescope TODO grep",
-            },
-            --{
-            --    '<leader>pg',
-            --    function() require 'telescope.builtin'.live_grep() end,
-            --    desc = "Telescope live_grep"
-            --},
+            { "<leader>ps", function() require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") }) end, desc = "Telescope grep_string", },
+            { "<leader>pt", function() require("telescope.builtin").grep_string({ search = "TODO" }) end, desc = "Telescope TODO grep", },
+            --{ '<leader>pg', function() require 'telescope.builtin'.live_grep() end, desc = "Telescope live_grep" },
 
             -- TODO not sure how nice this is
-            --{
-            --    '<leader>c',
-            --    function() require 'telescope.builtin'.quickfix() end,
-            --    desc = "Telescope Quickfix"
-            --},
+            --{ '<leader>c', function() require 'telescope.builtin'.quickfix() end, desc = "Telescope Quickfix" },
             --{ '<leader>hc', require 'telescope.builtin'.quickfixhistory, desc = "Telescope quickfixhistory" },
         },
         config = function()

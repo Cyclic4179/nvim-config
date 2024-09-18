@@ -82,7 +82,7 @@ return {
             --    }
             --}
 
-            lspconfig.ocamllsp.setup({})
+            lspconfig.ocamllsp.setup({ capabilities = capabilities })
 
             --lspconfig.pyright.setup { capabilities = capabilities }
             --lspconfig.jdtls.setup {

@@ -144,7 +144,8 @@ return {
                 }),
             })
 
-            vim.keymap.set("c", "<tab>", "<C-z>", { silent = false }) -- to fix cmp https://github.com/hrsh7th/nvim-cmp/issues/1511
+            -- to fix cmp https://github.com/hrsh7th/nvim-cmp/issues/1511
+            vim.keymap.set("c", "<tab>", "<C-z>", { silent = false })
         end,
     },
 }
