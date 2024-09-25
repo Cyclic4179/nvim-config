@@ -1,3 +1,8 @@
+-- TODO: this is not perfect
+-- (issues:
+--      can run debug_java multiple times, race may occur;
+--      if run main, then run junit but no junit fount, main runs again but not intended
+-- )
 local debug_java = function()
     local dap = require("dap")
     if dap.session() ~= nil then
@@ -21,7 +26,7 @@ local debug_java = function()
 
                 local nio = require("nio")
                 nio.run(function()
-                    for _ = 1, 10, 1 do
+                    for _ = 1, 6, 1 do -- wait 3 secs
                         nio.sleep(500)
 
                         if dap.session() == nil then -- if action already spawns debug session dont dap.continue()

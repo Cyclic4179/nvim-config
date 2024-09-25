@@ -10,6 +10,9 @@ return {
             { "<leader>pf", function() require("telescope.builtin").find_files() end, desc = "Telescope find_files", },
             { "<C-P>", function() require("telescope.builtin").git_files() end, desc = "Telescope git_files", },
 
+            -- trying this thing out
+            { "<leader>pr", function() require("telescope.builtin").resume() end, desc = "Telescope resume", },
+
             -- TODO not sure how nice this is
             --local is_inside_work_tree = {}
             --vim.keymap.set('n', '<C-P>', function ()

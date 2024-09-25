@@ -69,6 +69,7 @@ return {
 
         -- stylua: ignore
         keys = {
+            -- TODO: maybe keymaps without prefix (eg only on attached/debug buffers :shrug:)
             -- old config
             --{ "<leader>dt", function() require("dapui").toggle() end },
             { "<leader>ds", function() require("dapui").open({ reset = true }) end },

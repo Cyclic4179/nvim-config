@@ -39,6 +39,24 @@ return {
             vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
             vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
             vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+
+            local override_border = function(config)
+                -- idk why this works as i want it maybe FIXME in future
+                if config and config.border then -- override border if set
+                    config.border = "rounded"
+                end
+                return config
+            end
+            local local_nvim_open_win = vim.api.nvim_open_win
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.api.nvim_open_win = function(buffer, enter, config)
+                return local_nvim_open_win(buffer, enter, override_border(config))
+            end
+            local local_nvim_win_set_config = vim.api.nvim_win_set_config
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.api.nvim_win_set_config = function(window, config)
+                return local_nvim_win_set_config(window, override_border(config))
+            end
         end,
     },
 }

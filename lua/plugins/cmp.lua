@@ -97,7 +97,7 @@ return {
                     { name = "nvim_lsp_signature_help" },
                     { name = "luasnip" },
                 }, {
-                    { name = "async_path" },
+                    { name = "path" },
                     { name = "buffer", keyword_length = 4 },
                 }),
 
