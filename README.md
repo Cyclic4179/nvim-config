@@ -10,12 +10,13 @@ or add to profile:
 nix profile install github:Cyclic4179/nvim-config
 ```
 
-# DAP:
-maybe use debugger in java, python, ocaml?
-- [ocaml](https://github.com/hackwaly/ocamlearlybird)
-- [java](https://github.com/mfussenegger/nvim-jdtls)
-- [java](https://sookocheff.com/post/vim/neovim-java-ide/#debugging--nvim-dap)
 
+# branches
+### isabelle support
+see branch isabelle
 
-# old config without flakes (archived)
+### old flake config without lazy
+see branch pre-lazy
+
+### old config without flakes (archived)
 see branch legacy
