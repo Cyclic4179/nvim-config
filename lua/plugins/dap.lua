@@ -104,7 +104,10 @@ return {
             --{ "<leader>ds", function() require("dap").session() end, desc = "Session" },
             { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
             --{ "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
-            { "<Leader>df", function() require("dap").focus_frame() end, desc = "Focus executing line" },
+            { "<Leader>df", function()
+                require("dap").focus_frame()
+                vim.api.nvim_feedkeys("zz", "n", false)
+            end, desc = "Focus executing line" },
         },
 
         config = function()
@@ -144,8 +147,8 @@ return {
                 args = { "--quiet", "--interpreter=dap" },
                 enrich_config = function(config, on_config)
                     local final_config = vim.deepcopy(config)
-                    final_config.program = final_config.program or final_config[1]
-                    final_config.args = final_config.args or final_config[2]
+                    final_config.program = final_config.program or final_config[1]()
+                    final_config.args = final_config.args or final_config[2]()
                     on_config(final_config)
                 end,
             }
