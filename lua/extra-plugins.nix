@@ -58,6 +58,10 @@ with pkgs.vimPlugins;
   #  paths = nvim-treesitter.withAllGrammars.dependencies;
   #})
 
+  leap-nvim
+  hop-nvim
+  flash-nvim
+
   nvim-autopairs
 
   undotree

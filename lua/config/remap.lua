@@ -31,8 +31,23 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 --vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("v", "<leader>s", [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+-- if using this then <leader>s -> <leader>S
+--vim.keymap.set("n", "<leader>sk", function()
+--    return "<esc>V" .. vim.v.count1 .. "k" .. [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
+--end, { expr = true })
+--vim.keymap.set("n", "<leader>sj", function()
+--    return "<esc>V" .. vim.v.count1 .. "j" .. [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
+--end, { expr = true })
+
+-- see https://jdhao.github.io/2019/04/29/nvim_map_with_a_count/
+--vim.keymap.set("n", "<leader>o", function()
+--    return "m`" .. vim.v.count1 .. "o<esc>``"
+--end, { expr = true })
+--vim.keymap.set("n", "<leader>O", function()
+--    return "m`" .. vim.v.count .. "O<esc>``"
+--end, { expr = true })
 
 --vim.keymap.set("n", "[c", "<CMD>cnext<CR>")
 --vim.keymap.set("n", "]c", "<CMD>cprev<CR>")
