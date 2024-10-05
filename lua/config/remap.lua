@@ -23,22 +23,24 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 
 vim.keymap.set("n", "Q", "<nop>")
 --vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+--vim.keymap.set("n", "<leader>f", vim.lsp.buf.format) -- i am using conform now
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 --vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 --vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>s", [[:%s/\<<c-r><c-w>\>/<c-r><c-w>/gi<left><left><left>]])
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<cr>", { silent = true })
 
--- if using this then <leader>s -> <leader>S
+--vim.keymap.set("v", "\"", "")
+
+-- if using this then <leader>s -> <leader>s
 --vim.keymap.set("n", "<leader>sk", function()
---    return "<esc>V" .. vim.v.count1 .. "k" .. [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
+--    return "<esc>v" .. vim.v.count1 .. "k" .. [[:s/\<<c-r><c-w>\>/<c-r><c-w>/gi<left><left><left>]]
 --end, { expr = true })
 --vim.keymap.set("n", "<leader>sj", function()
---    return "<esc>V" .. vim.v.count1 .. "j" .. [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
+--    return "<esc>v" .. vim.v.count1 .. "j" .. [[:s/\<<c-r><c-w>\>/<c-r><c-w>/gi<left><left><left>]]
 --end, { expr = true })
 
 -- see https://jdhao.github.io/2019/04/29/nvim_map_with_a_count/

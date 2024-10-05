@@ -10,14 +10,6 @@ return {
         end,
     },
     {
-        "jmbuhr/otter.nvim",
-        lazy = true,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-        },
-        opts = {},
-    },
-    {
         "onsails/lspkind.nvim",
         name = "lspkind-nvim",
         lazy = true,
@@ -44,8 +36,6 @@ return {
 
             "hrsh7th/cmp-cmdline",
 
-            -- injected code
-            "jmbuhr/otter.nvim",
             -- maybe this: https://github.com/petertriho/cmp-git
         },
         config = function()

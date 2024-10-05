@@ -7,11 +7,15 @@ return {
         lazy = true,
 
         config = function()
-            vim.keymap.set({ "i", "s" }, "<C-L>", function()
+            --vim.keymap.set({ "i", "s" }, "<C-L>", function()
+            --    require("luasnip").jump(1)
+            --end, { silent = true })
+            vim.keymap.set({ "i", "s" }, "<C-s>n", function()
                 require("luasnip").jump(1)
             end, { silent = true })
-            --vim.keymap.set({ "i", "s" }, "<C-s>;", function() ls.jump(1) end, { silent = true })
-            --vim.keymap.set({ "i", "s" }, "<C-s>,", function() ls.jump(-1) end, { silent = true })
+            vim.keymap.set({ "i", "s" }, "<C-s>p", function()
+                require("luasnip").jump(-1)
+            end, { silent = true })
 
             --local ls = require("luasnip")
             --ls.filetype_extend("javascript", { "jsdoc" })
@@ -27,8 +31,6 @@ return {
             --        ls.change_choice(1)
             --    end
             --end, { silent = true })
-
-
 
             -- copied from https://sbulav.github.io/vim/neovim-setting-up-luasnip/
 

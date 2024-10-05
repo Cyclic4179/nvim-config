@@ -41,6 +41,7 @@ with pkgs.vimPlugins;
     meta.homepage = "https://github.com/tzachar/local-highlight.nvim";
   })
 
+  which-key-nvim
 
   plenary-nvim
   telescope-nvim
@@ -57,6 +58,8 @@ with pkgs.vimPlugins;
   #  name = "nix-treesitter-parsers";
   #  paths = nvim-treesitter.withAllGrammars.dependencies;
   #})
+
+  mini-nvim
 
   leap-nvim
   hop-nvim

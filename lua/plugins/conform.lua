@@ -44,8 +44,17 @@ return {
                 ocaml = { "ocamlformat" },
                 c = { "clang-format" },
                 cpp = { "clang-format" },
+                ["*"] = { "injected" },
             },
             formatters = {
+                stylua = {
+                    prepend_args = {
+                        "--indent-type",
+                        "Spaces",
+                        "--indent-width",
+                        "4",
+                    },
+                },
                 ocamlformat = {
                     -- see `man ocamlformat` or https://ocaml.org/p/ocamlformat/latest/doc/index.html
                     prepend_args = {
@@ -79,6 +88,33 @@ return {
                         BreakBeforeBinaryOperators: NonAssignment, \z
                         BreakConstructorInitializers: BeforeComma, \z
                         SpaceAfterCStyleCast: true}",
+                    },
+                },
+                injected = {
+                    options = {
+                        -- Set to true to ignore errors
+                        ignore_errors = false,
+                        -- Map of treesitter language to file extension
+                        -- A temporary file name with this extension will be generated during formatting
+                        -- because some formatters care about the filename.
+                        lang_to_ext = {
+                            bash = "sh",
+                            c_sharp = "cs",
+                            elixir = "exs",
+                            javascript = "js",
+                            julia = "jl",
+                            latex = "tex",
+                            markdown = "md",
+                            python = "py",
+                            ruby = "rb",
+                            rust = "rs",
+                            teal = "tl",
+                            r = "r",
+                            typescript = "ts",
+                        },
+                        -- Map of treesitter language to formatters to use
+                        -- (defaults to the value from formatters_by_ft)
+                        lang_to_formatters = {},
                     },
                 },
             },
