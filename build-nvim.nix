@@ -27,15 +27,6 @@ let
     else
       drv;
 
-  # Link together all treesitter grammars into single derivation
-  # for some reason we need to do this
-  treesitter-parsers = (
-    pkgs.symlinkJoin {
-      name = "nix-treesitter-parsers";
-      paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
-    }
-  );
-
   #envVarString = lib.pipe extraEnvVars [
   #  builtins.attrNames
   #  (builtins.map (name: "${name}=${extraEnvVars.${name}}"))
@@ -70,8 +61,6 @@ let
       ))
       (builtins.concatStringsSep "\n")
     ];
-
-  trace = t: builtins.trace t t;
 
   luaInitConfig = recCatContent ./lua/config;
   lazyUserPluginDir = pkgs.runCommand "lazy-user-plugins" { } ''
