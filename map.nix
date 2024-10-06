@@ -19,7 +19,7 @@
   * }
 */
 let
-  inherit (import ./lib.nix args) toPrettyString;
+  inherit (import ./lib.nix args) toPrettyString prettyTrace;
   recMapNix =
     let
       merge =
@@ -88,9 +88,7 @@ let
             ''
         else if lib.hasSuffix ".lua" wholepath then
           # lol try to detect dependencies?
-          {
-            luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ];
-          }
+          { luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ]; }
         else
           lib.warn "ignoring file: ${toString wholepath}" { }
       #)
@@ -125,7 +123,7 @@ let
     let
       res = recMapNix relpath wholepath;
     in
-    {
+    prettyTrace "recursiveWalk result" res {
       luaCfg = pkgs.symlinkJoin {
         name = "lua-files";
         paths = res.luaFiles;

@@ -9,9 +9,13 @@ let
 
   recMapNix = import ./map.nix args;
 
-  cfg = prettyTraceId (recMapNix "lua/plugins" ./test);
+  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ./test);
+  config = prettyTraceId "recMapNix config" (recMapNix "" ./lua/config);
 
-  pluginPath = pkgs.linkFarm "lazyvim-nix-plugins" (builtins.map mkEntryFromDrv cfg.vimPlugins);
+  finalVimPlugins = lazy-plugins.vimPlugins ++ config.vimPlugins;
+  finalExtraPackages = lazy-plugins.extraPackages ++ config.extraPackages;
+
+  pluginPath = pkgs.linkFarm "lazyvim-nix-plugins" (builtins.map mkEntryFromDrv finalVimPlugins);
 
   mkEntryFromDrv =
     drv:
@@ -23,10 +27,18 @@ let
     else
       drv;
 
+  luaConfigFile = prettyTraceId "luaConfigFile" (recCatContent config.luaCfg);
+
+  recCatContent =
+    path:
+    pkgs.runCommand "recursive-cat" { } ''
+      cat ${path}/** > $out
+    '';
+
   # paths to executables that should be available when running nvim
   extraMakeWrapperArgsPath =
     let
-      binPath = lib.makeBinPath cfg.extraPackages;
+      binPath = lib.makeBinPath finalExtraPackages;
     in
     [
       "--suffix"
@@ -40,24 +52,27 @@ let
   # maybe use lib.fix for this
   # see https://github.com/hsjobeki/nixpkgs/blob/migrate-doc-comments/pkgs/applications/editors/neovim/wrapper.nix
   # copied from https://github.com/nvim-neorocks/rocks.nvim/blob/b24f15ace8542882946222bbc2be332ed57a0861/nix/plugin-overlay.nix#L196
-  neovimConfig = prettyTraceId (pkgs.neovimUtils.makeNeovimConfig {
-    withPython3 = false;
-    withNodeJs = false;
-    withRuby = false;
+  neovimConfig = prettyTraceId "neovimConfig" (
+    pkgs.neovimUtils.makeNeovimConfig {
+      withPython3 = false;
+      withNodeJs = false;
+      withRuby = false;
 
-    viAlias = false;
-    vimAlias = true;
+      viAlias = false;
+      vimAlias = true;
 
-    plugins = [
-      pkgs.vimPlugins.lazy-nvim
-    ];
-  });
+      plugins = [ pkgs.vimPlugins.lazy-nvim ];
+    }
+  );
   neovimWrapped = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (
     neovimConfig
     // {
       luaRcContent =
         # lua
         ''
+          -- config
+          ${builtins.readFile luaConfigFile}
+
           require("lazy").setup({
             --defaults = { lazy = true },
             dev = {
@@ -93,7 +108,7 @@ let
             performance = {
               rtp = {
                 -- Setup correct config path
-                paths = { "${cfg.luaCfg}" },
+                paths = { "${lazy-plugins.luaCfg}" },
                 disabled_plugins = {
                   --"gzip",
                   "matchit",
