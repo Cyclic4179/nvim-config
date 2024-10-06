@@ -33,7 +33,7 @@ let
     path:
     prettyTrace "recCatContent called" path (
     pkgs.runCommand "recursive-cat" { } ''
-      ${lib.getExe pkgs.fd} . ${path} --type=file --follow --exec-batch=cat > $out
+      find ${path} -type f -follow -exec cat {} + > $out
     '');
 
   # paths to executables that should be available when running nvim

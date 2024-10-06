@@ -16,7 +16,7 @@ return {
     },
     {
         "hrsh7th/nvim-cmp",
-        event = "InsertEnter",
+        event = "VeryLazy",
         dependencies = {
             -- vs-code like pictograms
             "onsails/lspkind.nvim",
@@ -32,7 +32,7 @@ return {
             "hrsh7th/cmp-path",
             -- "FelipeLema/cmp-async-path", -- might replace cmp-path
             "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-calc",
+            -- "hrsh7th/cmp-calc",
 
             "hrsh7th/cmp-cmdline",
 
@@ -79,16 +79,22 @@ return {
                     ["<S-Tab>"] = nil,
                 },
 
+                -- i dont like them bordered
+                -- window = {
+                --     completion = cmp.config.window.bordered(),
+                --     documentation = cmp.config.window.bordered(),
+                -- },
+
                 sources = cmp.config.sources({
                     { name = "luasnip_choice" },
-                    { name = "calc" },
+                    --{ name = "calc" }, -- kinda useless
                     { name = "nvim_lua" },
                     { name = "nvim_lsp" },
                     { name = "nvim_lsp_signature_help" },
                     { name = "luasnip" },
                 }, {
                     { name = "path" },
-                    { name = "buffer", keyword_length = 4 },
+                    { name = "buffer", keyword_length = 3 },
                 }),
 
                 formatting = {
@@ -135,7 +141,7 @@ return {
             })
 
             -- to fix cmp https://github.com/hrsh7th/nvim-cmp/issues/1511
-            vim.keymap.set("c", "<tab>", "<C-z>", { silent = false })
+            vim.keymap.set("c", "<tab>", "<C-z>", { silent = false }) -- <C-Space> jank (cursor jumps)
         end,
     },
 }

@@ -8,6 +8,8 @@ with pkgs.vimPlugins;
 [
   #LazyVim
 
+  vim-repeat
+
   # theme
   # until nixpkgs has newer rose-pine version (needed for customizing text color)
   #rose-pine
@@ -85,17 +87,29 @@ with pkgs.vimPlugins;
 
   conform-nvim
   # doesnt exist in nixpkgs, see this pull request https://github.com/norcalli/nvim-colorizer.lua/pull/104
+  nvim-highlight-colors
   (pkgs.vimUtils.buildVimPlugin {
     pname = "nvim-colorizer.lua";
-    version = "2024-07-03";
+    version = "2024-09-11";
     src = pkgs.fetchFromGitHub {
-      owner = "mertkaradayi";
+      owner = "NvChad";
       repo = "nvim-colorizer.lua";
-      rev = "23fba8faf199244a480c9d78431e2a4a29aea880";
-      sha256 = "sha256-ndJy6Nqjsz+J8aACtyoF2Ks8LZe99tO00EN3mZbShx4=";
+      rev = "0671e0eabc6842676d3310370e8fae4e1c51d7f9";
+      sha256 = "sha256-Ffi1Q5+AI+Ysi2T56myGWmAzzyq6wW0J/Pwoc3B0ncY=";
     };
     meta.homepage = "https://github.com/norcalli/nvim-colorizer.lua";
   })
+  # (pkgs.vimUtils.buildVimPlugin {
+  #   pname = "nvim-colorizer.lua";
+  #   version = "2024-07-03";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "mertkaradayi";
+  #     repo = "nvim-colorizer.lua";
+  #     rev = "23fba8faf199244a480c9d78431e2a4a29aea880";
+  #     sha256 = "sha256-ndJy6Nqjsz+J8aACtyoF2Ks8LZe99tO00EN3mZbShx4=";
+  #   };
+  #   meta.homepage = "https://github.com/norcalli/nvim-colorizer.lua";
+  # })
 
   # harpoon
   harpoon2
