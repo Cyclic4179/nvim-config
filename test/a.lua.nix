@@ -1,0 +1,4 @@
+{ pkgs, ... }:
+{
+  extraPackages = [ pkgs.bat ];
+}
