@@ -10,10 +10,8 @@ let
   globalVars = import ./lua/global-vars.nix args;
 
   globalVarsString = builtins.concatStringsSep "\n" (
-    lib.mapAttrsToList (name: value: ''let g:${name} = "${value}"'') globalVars
+    lib.mapAttrsToList (name: value: ''vim.g.${name} = "${value}"'') globalVars
   );
-
-  lib = pkgs.lib;
 
   pluginPath = pkgs.linkFarm "lazyvim-nix-plugins" (builtins.map mkEntryFromDrv extraPlugins);
 
@@ -68,16 +66,29 @@ let
     cp -r ${./lua/plugins}/* $out/lua/plugins/
   '';
 
-  neovimWrapped = pkgs.wrapNeovim pkgs.neovim-unwrapped {
-    #extraMakeWrapperArgs = "${extraMakeWrapperArgsPath} ${extraMakeWrapperArgsEnvVars}";
-    extraMakeWrapperArgs = extraMakeWrapperArgsPath;
-    configure = {
-      customRC = # vim
+  # see https://github.com/hsjobeki/nixpkgs/blob/migrate-doc-comments/pkgs/applications/editors/neovim/wrapper.nix
+  # copied from https://github.com/nvim-neorocks/rocks.nvim/blob/b24f15ace8542882946222bbc2be332ed57a0861/nix/plugin-overlay.nix#L196
+  neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+    withPython3 = false;
+    withNodeJs = false;
+    withRuby = false;
+
+    viAlias = false;
+    vimAlias = false;
+
+    plugins = [
+      pkgs.vimPlugins.lazy-nvim
+    ];
+  };
+  neovimWrapped = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (
+    neovimConfig
+    // {
+      luaRcContent =
+        # lua
         ''
-          " populate paths to neovim
+          -- populate paths to neovim
           ${globalVarsString}
 
-          lua<<EOF
           ${luaInitConfig}
 
           require("lazy").setup({
@@ -161,15 +172,12 @@ let
               },
             },
           })
-          EOF
         '';
-      packages.all.start = [ pkgs.vimPlugins.lazy-nvim ];
-    };
-    withRuby = false;
-    withNodeJs = false;
-    withPython3 = false;
-    #vimAlias = true;
-  };
+      wrapRc = true; # sets -u <vimrc> (and hence ignores local .vimrc, ...)
+      wrapperArgs = neovimConfig.wrapperArgs ++ extraMakeWrapperArgsPath;
+      neovimRcContent = if neovimConfig.neovimRcContent == "" then null else neovimConfig.neovimRcContent;
+    }
+  );
 in
 #pkgs.neovimBuilder {
 #  inherit plugins;
