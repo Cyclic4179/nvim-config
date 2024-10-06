@@ -1,12 +1,9 @@
 {
   description = "NeoVim config";
 
-  #inputs.nix2vim.url = "github:gytis-ivaskevicius/nix2vim";
-  #inputs.nix2vim.inputs.nixpkgs.follows = "nixpkgs";
-  #inputs.nix2vim.inputs.flake-utils.follows = "flake-utils";
-
   inputs.nixpkgs.url = "nixpkgs/nixpkgs-unstable";
 
+  # used for java styleguide
   inputs.google-styleguide.url = "github:google/styleguide/gh-pages";
   inputs.google-styleguide.flake = false;
 
@@ -15,8 +12,6 @@
       self,
       nixpkgs,
       flake-utils,
-      #nix2vim,
-      #google-styleguide,
       ...
     }@inputs:
     {
@@ -27,9 +22,8 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          #overlays = [ nix2vim.overlay ];
         };
-        neovim = import ./build-nvim.nix {
+        neovim = import ./nix/build-nvim.nix {
           inherit pkgs inputs;
           lib = pkgs.lib;
         };

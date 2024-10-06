@@ -9,8 +9,8 @@ let
 
   recMapNix = import ./map.nix args;
 
-  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ./plugins);
-  config = prettyTraceId "recMapNix config" (recMapNix "" ./config);
+  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ../plugins);
+  config = prettyTraceId "recMapNix config" (recMapNix "" ../config);
 
   finalVimPlugins = lazy-plugins.vimPlugins ++ config.vimPlugins;
   finalExtraPackages = lazy-plugins.extraPackages ++ config.extraPackages;
@@ -75,6 +75,7 @@ let
           ${builtins.readFile luaConfigFile}
 
           require("lazy").setup({
+            --root = nil;
             --defaults = { lazy = true },
             dev = {
               -- reuse files from pkgs.vimPlugins.*
