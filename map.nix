@@ -109,7 +109,6 @@ let
               in
               if ft == "regular" then
                 getContentNixOrLuaFile newsubp newp
-              # TODO: handle other cases (directoy, unknown, symlink)
               else if ft == "directory" then
                 recursiveWalk newsubp newp
               else

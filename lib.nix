@@ -7,7 +7,9 @@ let
     else if builtins.isString x then
       ''"${lib.escape [ "\"" ] x}"''
     else if builtins.isBool x then
-      if x then "true" else false
+      if x then "true" else "false"
+    else if lib.isDerivation x then
+      if x ? drvPath then "«derivation ${x.drvPath}»" else "«derivation»"
     else if
       builtins.isInt x || builtins.isFloat x || builtins.isPath x || x ? outPath || x ? __toString
     then

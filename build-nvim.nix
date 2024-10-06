@@ -5,11 +5,11 @@
 }@args:
 
 let
-  inherit (import ./lib.nix args) prettyTrace;
+  inherit (import ./lib.nix args) prettyTrace prettyTraceId;
 
   recMapNix = import ./map.nix args;
 
-  cfg = prettyTrace (recMapNix "lua/plugins" ./test);
+  cfg = prettyTraceId (recMapNix "lua/plugins" ./test);
 
   pluginPath = pkgs.linkFarm "lazyvim-nix-plugins" (builtins.map mkEntryFromDrv cfg.vimPlugins);
 
@@ -40,7 +40,7 @@ let
   # maybe use lib.fix for this
   # see https://github.com/hsjobeki/nixpkgs/blob/migrate-doc-comments/pkgs/applications/editors/neovim/wrapper.nix
   # copied from https://github.com/nvim-neorocks/rocks.nvim/blob/b24f15ace8542882946222bbc2be332ed57a0861/nix/plugin-overlay.nix#L196
-  neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+  neovimConfig = prettyTraceId (pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
     withNodeJs = false;
     withRuby = false;
@@ -51,7 +51,7 @@ let
     plugins = [
       pkgs.vimPlugins.lazy-nvim
     ];
-  };
+  });
   neovimWrapped = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (
     neovimConfig
     // {
