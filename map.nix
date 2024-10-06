@@ -89,7 +89,7 @@ let
         else if lib.hasSuffix ".lua" wholepath then
           # lol try to detect dependencies?
           {
-            luaFiles = [ wholepath ];
+            luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ];
           }
         else
           lib.warn "ignoring file: ${toString wholepath}" { }
