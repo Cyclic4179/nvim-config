@@ -9,8 +9,8 @@ let
 
   recMapNix = import ./map.nix args;
 
-  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ./test);
-  config = prettyTraceId "recMapNix config" (recMapNix "" ./lua/config);
+  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ./plugins);
+  config = prettyTraceId "recMapNix config" (recMapNix "" ./config);
 
   finalVimPlugins = lazy-plugins.vimPlugins ++ config.vimPlugins;
   finalExtraPackages = lazy-plugins.extraPackages ++ config.extraPackages;
@@ -31,9 +31,10 @@ let
 
   recCatContent =
     path:
+    prettyTrace "recCatContent called" path (
     pkgs.runCommand "recursive-cat" { } ''
-      cat ${path}/** > $out
-    '';
+      ${lib.getExe pkgs.fd} . ${path} --type=file --follow --exec-batch=cat > $out
+    '');
 
   # paths to executables that should be available when running nvim
   extraMakeWrapperArgsPath =

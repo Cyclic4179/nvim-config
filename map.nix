@@ -61,7 +61,7 @@ let
       # relpath is only for dir in writeTextFile
       getContentNixOrLuaFile =
         relpath: wholepath:
-        #builtins.trace "getContentNixOrLuaFile: ${relpath} ${wholepath}" (
+        # prettyTrace "getContentNixOrLuaFile" "${relpath} ${wholepath}" (
         if lib.hasSuffix ".lua.nix" wholepath then
           let
             res = import wholepath args;
@@ -87,16 +87,16 @@ let
               ${toPrettyString res}
             ''
         else if lib.hasSuffix ".lua" wholepath then
-          # lol try to detect dependencies?
+          # TODO: lol try to detect dependencies?
           { luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ]; }
         else
           lib.warn "ignoring file: ${toString wholepath}" { }
-      #)
+      # )
       ;
 
       recursiveWalk =
         relpath: wholepath:
-        builtins.trace "recursiveWalk called: ${relpath} ${wholepath}" (
+        prettyTrace "recursiveWalk called" "${relpath} ${wholepath}" (
           lib.pipe wholepath [
             builtins.readDir
             (lib.mapAttrsToList (
