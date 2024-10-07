@@ -1,21 +1,21 @@
 return {
-    {
-        -- see https://github.com/tzachar/local-highlight.nvim
-        -- i think this is more annoying than useful
-        "tzachar/local-highlight.nvim",
-        event = { "BufRead" },
-        opts = {
-            --hlgroup = "Search",
-            -- Whether to display highlights in INSERT mode or not
-            --insert_mode = false,
-            min_match_len = 5, -- default is 1
-            --max_match_len = math.huge,
-            --highlight_single_match = true,
-        },
-        init = function()
-            vim.g.updatetime = 300
-        end,
-    },
+    -- {
+    --     -- see https://github.com/tzachar/local-highlight.nvim
+    --     -- i think this is more annoying than useful
+    --     "tzachar/local-highlight.nvim",
+    --     event = { "BufRead" },
+    --     opts = {
+    --         --hlgroup = "Search",
+    --         -- Whether to display highlights in INSERT mode or not
+    --         --insert_mode = false,
+    --         min_match_len = 5, -- default is 1
+    --         --max_match_len = math.huge,
+    --         --highlight_single_match = true,
+    --     },
+    --     init = function()
+    --         vim.g.updatetime = 300
+    --     end,
+    -- },
     -- {
     --     -- doesnt work that great
     --     "jmbuhr/otter.nvim",
@@ -41,6 +41,7 @@ return {
         "folke/which-key.nvim",
         event = "VeryLazy",
         opts = {
+            --delay = 200,
             --triggers = {},
             -- your configuration comes here
             -- or leave it empty to use the default settings
@@ -84,24 +85,24 @@ return {
     --    "tpope/vim-repeat",
     --    event = "VeryLazy",
     --},
-    {
-        -- leap is nice, but not sure if i dont overuse it
-        "ggandor/leap.nvim",
-        event = "VeryLazy",
-        -- stylua: ignore
-        --keys = {
-        --    -- buggy, see https://github.com/LazyVim/LazyVim/issues/2379
-        --    { "s", function() require("leap").leap() end, mode = { "x", "n" }, desc = "Leap", },
-        --},
-        config = function()
-            local leap = require("leap")
-            leap.opts.case_sensitive = true
+    --{
+    --    -- leap is nice, but not sure if i dont overuse it
+    --    "ggandor/leap.nvim",
+    --    event = "VeryLazy",
+    --    -- stylua: ignore
+    --    --keys = {
+    --    --    -- buggy, see https://github.com/LazyVim/LazyVim/issues/2379
+    --    --    { "s", function() require("leap").leap() end, mode = { "x", "n" }, desc = "Leap", },
+    --    --},
+    --    config = function()
+    --        local leap = require("leap")
+    --        leap.opts.case_sensitive = true
 
-            vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
-            vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
-            vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
-        end,
-    },
+    --        vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
+    --        vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
+    --        vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
+    --    end,
+    --},
     --{
     --    -- doesnt highlight in insert_mode
     --    "brenoprata10/nvim-highlight-colors",
@@ -148,6 +149,13 @@ return {
             cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
     },
+    -- maybe enable this (https://github.com/andymass/vim-matchup)
+    -- {
+    --     "andymass/vim-matchup",
+    --     init = function()
+    --         vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    --     end,
+    -- },
     {
         -- also unmaintained, but more recent
         "NvChad/nvim-colorizer.lua",

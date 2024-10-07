@@ -32,7 +32,10 @@ return {
             --
             --end)
 
-            { "<leader>ps", function() require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") }) end, desc = "Telescope grep_string", },
+            { "<leader>ps", function()
+                local grep_str = vim.fn.input("Grep > ")
+                if grep_str ~= "" then require("telescope.builtin").grep_string({ search = grep_str }) end
+            end, desc = "Telescope grep_string", },
             { "<leader>pt", function() require("telescope.builtin").grep_string({ search = "TODO" }) end, desc = "Telescope TODO grep", },
             --{ '<leader>pg', function() require 'telescope.builtin'.live_grep() end, desc = "Telescope live_grep" },
 

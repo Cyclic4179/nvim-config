@@ -19,7 +19,13 @@
   * }
 */
 let
-  inherit (import ./lib.nix args) toPrettyString prettyTrace;
+  #inherit (import ./lib.nix args) toPrettyString prettyTrace;
+
+  inherit (import ./lib.nix args) toPrettyString;
+  prettyTrace =
+    x: y: z:
+    z;
+
   recMapNix =
     let
       merge =
@@ -61,38 +67,37 @@ let
       # relpath is only for dir in writeTextFile
       getContentNixOrLuaFile =
         relpath: wholepath:
-        # prettyTrace "getContentNixOrLuaFile" "${relpath} ${wholepath}" (
-        if lib.hasSuffix ".lua.nix" wholepath then
-          let
-            res = import wholepath args;
-          in
-          if builtins.isString res then
-            {
-              luaFiles = [ (pkgs.writeTextDir (rmNixSuffix relpath) res) ];
-              vimPlugins = [ ];
-              extraPackages = [ ];
-            }
-          else if builtins.isAttrs res && (builtins.tryEval (checkAttrStructure res)).success then
-            {
-              luaFiles = if res ? lua then [ (pkgs.writeTextDir (rmNixSuffix relpath) res.lua) ] else [ ];
-              vimPlugins = if res ? vimPlugins then res.vimPlugins else [ ];
-              extraPackages = if res ? extraPackages then res.extraPackages else [ ];
-            }
+        prettyTrace "getContentNixOrLuaFile" "${relpath} ${wholepath}" (
+          if lib.hasSuffix ".lua.nix" wholepath then
+            let
+              res = import wholepath args;
+            in
+            if builtins.isString res then
+              {
+                luaFiles = [ (pkgs.writeTextDir (rmNixSuffix relpath) res) ];
+                vimPlugins = [ ];
+                extraPackages = [ ];
+              }
+            else if builtins.isAttrs res && (builtins.tryEval (checkAttrStructure res)).success then
+              {
+                luaFiles = if res ? lua then [ (pkgs.writeTextDir (rmNixSuffix relpath) res.lua) ] else [ ];
+                vimPlugins = if res ? vimPlugins then res.vimPlugins else [ ];
+                extraPackages = if res ? extraPackages then res.extraPackages else [ ];
+              }
+            else
+              # case: *.nix file evaluates to sth else
+              throw ''
+                expected ${toString wholepath} to evaluate to string
+                or { lua :: string , vimPlugins :: [ derivations ... ] , extraPackages :: [ derivations ... ]}
+                but was:
+                ${toPrettyString res}
+              ''
+          else if lib.hasSuffix ".lua" wholepath then
+            # TODO: lol try to detect dependencies?
+            { luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ]; }
           else
-            # case: *.nix file evaluates to sth else
-            throw ''
-              expected ${toString wholepath} to evaluate to string
-              or { lua :: string , vimPlugins :: [ derivations ... ] , extraPackages :: [ derivations ... ]}
-              but was:
-              ${toPrettyString res}
-            ''
-        else if lib.hasSuffix ".lua" wholepath then
-          # TODO: lol try to detect dependencies?
-          { luaFiles = [ (pkgs.writeTextDir relpath (builtins.readFile wholepath)) ]; }
-        else
-          lib.warn "ignoring file: ${toString wholepath}" { }
-      # )
-      ;
+            lib.warn "ignoring file: ${toString wholepath}" { }
+        );
 
       recursiveWalk =
         relpath: wholepath:
