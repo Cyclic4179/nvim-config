@@ -19,12 +19,7 @@
   * }
 */
 let
-  #inherit (import ./lib.nix args) toPrettyString prettyTrace;
-
-  inherit (import ./lib.nix args) toPrettyString;
-  prettyTrace =
-    x: y: z:
-    z;
+  inherit (import ./lib.nix args) toPrettyString prettyTraceDebug;
 
   recMapNix =
     let
@@ -67,7 +62,7 @@ let
       # relpath is only for dir in writeTextFile
       getContentNixOrLuaFile =
         relpath: wholepath:
-        prettyTrace "getContentNixOrLuaFile" "${relpath} ${wholepath}" (
+        prettyTraceDebug "getContentNixOrLuaFile" "${relpath} ${wholepath}" (
           if lib.hasSuffix ".lua.nix" wholepath then
             let
               res = import wholepath args;
@@ -101,7 +96,7 @@ let
 
       recursiveWalk =
         relpath: wholepath:
-        prettyTrace "recursiveWalk called" "${relpath} ${wholepath}" (
+        prettyTraceDebug "recursiveWalk called" "${relpath} ${wholepath}" (
           lib.pipe wholepath [
             builtins.readDir
             (lib.mapAttrsToList (
@@ -128,7 +123,7 @@ let
     let
       res = recMapNix relpath wholepath;
     in
-    prettyTrace "recursiveWalk result" res {
+    prettyTraceDebug "recursiveWalk result" res {
       luaCfg = pkgs.symlinkJoin {
         name = "lua-files";
         paths = res.luaFiles;

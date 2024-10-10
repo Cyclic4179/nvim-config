@@ -5,12 +5,12 @@
 }@args:
 
 let
-  inherit (import ./lib.nix args) prettyTrace prettyTraceId;
+  inherit (import ./lib.nix args) prettyTraceDebug prettyTraceIdDebug;
 
   recMapNix = import ./map.nix args;
 
-  lazy-plugins = prettyTraceId "recMapNix test" (recMapNix "lua/plugins" ../plugins);
-  config = prettyTraceId "recMapNix config" (recMapNix "" ../config);
+  lazy-plugins = prettyTraceIdDebug "recMapNix test" (recMapNix "lua/plugins" ../plugins);
+  config = prettyTraceIdDebug "recMapNix config" (recMapNix "" ../config);
 
   finalVimPlugins = lazy-plugins.vimPlugins ++ config.vimPlugins;
   finalExtraPackages = lazy-plugins.extraPackages ++ config.extraPackages;
@@ -27,11 +27,11 @@ let
     else
       drv;
 
-  luaConfigFile = prettyTraceId "luaConfigFile" (recCatContent config.luaCfg);
+  luaConfigFile = prettyTraceIdDebug "luaConfigFile" (recCatContent config.luaCfg);
 
   recCatContent =
     path:
-    prettyTrace "recCatContent called" path (
+    prettyTraceDebug "recCatContent called" path (
       pkgs.runCommand "recursive-cat" { } ''
         find ${path} -type f -follow -exec cat {} + > $out
       ''
@@ -54,7 +54,7 @@ let
   # maybe use lib.fix for this
   # see https://github.com/hsjobeki/nixpkgs/blob/migrate-doc-comments/pkgs/applications/editors/neovim/wrapper.nix
   # copied from https://github.com/nvim-neorocks/rocks.nvim/blob/b24f15ace8542882946222bbc2be332ed57a0861/nix/plugin-overlay.nix#L196
-  neovimConfig = prettyTraceId "neovimConfig" (
+  neovimConfig = prettyTraceIdDebug "neovimConfig" (
     pkgs.neovimUtils.makeNeovimConfig {
       withPython3 = false;
       withNodeJs = false;
