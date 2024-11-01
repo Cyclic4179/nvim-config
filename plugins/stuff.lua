@@ -85,24 +85,24 @@ return {
     --    "tpope/vim-repeat",
     --    event = "VeryLazy",
     --},
-    --{
-    --    -- leap is nice, but not sure if i dont overuse it
-    --    "ggandor/leap.nvim",
-    --    event = "VeryLazy",
-    --    -- stylua: ignore
-    --    --keys = {
-    --    --    -- buggy, see https://github.com/LazyVim/LazyVim/issues/2379
-    --    --    { "s", function() require("leap").leap() end, mode = { "x", "n" }, desc = "Leap", },
-    --    --},
-    --    config = function()
-    --        local leap = require("leap")
-    --        leap.opts.case_sensitive = true
+    {
+        -- leap is nice, but not sure if i dont overuse it
+        "ggandor/leap.nvim",
+        event = "VeryLazy",
+        -- stylua: ignore
+        --keys = {
+        --    -- buggy, see https://github.com/LazyVim/LazyVim/issues/2379
+        --    { "s", function() require("leap").leap() end, mode = { "x", "n" }, desc = "Leap", },
+        --},
+        config = function()
+            local leap = require("leap")
+            leap.opts.case_sensitive = true
 
-    --        vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
-    --        vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
-    --        vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
-    --    end,
-    --},
+            vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
+            vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
+            vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
+        end,
+    },
     --{
     --    -- doesnt highlight in insert_mode
     --    "brenoprata10/nvim-highlight-colors",

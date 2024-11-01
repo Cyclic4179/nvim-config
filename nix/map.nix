@@ -59,6 +59,9 @@ let
 
       rmNixSuffix = lib.removeSuffix ".nix";
 
+      # NOTE: "\n" is appended to ensure no overlap in lines
+      writeLuaFile = relpath: text: pkgs.writeTextDir (rmNixSuffix relpath) (text + "\n");
+
       # relpath is only for dir in writeTextFile
       getContentNixOrLuaFile =
         relpath: wholepath:
@@ -69,13 +72,13 @@ let
             in
             if builtins.isString res then
               {
-                luaFiles = [ (pkgs.writeTextDir (rmNixSuffix relpath) res) ];
+                luaFiles = [ (writeLuaFile relpath res) ];
                 vimPlugins = [ ];
                 extraPackages = [ ];
               }
             else if builtins.isAttrs res && (builtins.tryEval (checkAttrStructure res)).success then
               {
-                luaFiles = if res ? lua then [ (pkgs.writeTextDir (rmNixSuffix relpath) res.lua) ] else [ ];
+                luaFiles = if res ? lua then [ (writeLuaFile relpath res.lua) ] else [ ];
                 vimPlugins = if res ? vimPlugins then res.vimPlugins else [ ];
                 extraPackages = if res ? extraPackages then res.extraPackages else [ ];
               }

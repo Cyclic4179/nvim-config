@@ -1,4 +1,9 @@
 vim.g.mapleader = " "
+
+-- https://github.com/folke/dot/blob/master/nvim/lua/config/options.lua ?
+--local keymap_set = vim.keymap.set
+--vim.keymap.set =
+
 --vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -55,8 +60,11 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<cr>", { silent = true })
 --    return "m`" .. vim.v.count .. "O<esc>``"
 --end, { expr = true })
 
---vim.keymap.set("n", "[c", "<CMD>cnext<CR>")
---vim.keymap.set("n", "]c", "<CMD>cprev<CR>")
+vim.keymap.set("n", "j", "gj", { noremap = true })
+vim.keymap.set("n", "gj", "j", { noremap = true })
+
+vim.keymap.set("n", "[c", "<CMD>cnext<CR>")
+vim.keymap.set("n", "]c", "<CMD>cprev<CR>")
 
 -- maybe sometime
 --vim.keymap.set('n', '[l', '<CMD>:lnext<CR>')
@@ -64,9 +72,3 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<cr>", { silent = true })
 
 -- trying this out: (this sucks)
 --vim.keymap.set("n", "<leader>h", "<cmd>set hlsearch!<cr>")
-
---vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
-
---vim.keymap.set("n", "<leader><leader>", function()
---    vim.cmd("so")
---end)

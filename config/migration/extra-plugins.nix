@@ -52,6 +52,17 @@ with pkgs.vimPlugins;
   #nvim-treesitter.withAllGrammars
   #playground # treesitter playground
   nvim-treesitter-context
+  #(pkgs.vimUtils.buildVimPlugin {
+  #  pname = "nvim-treesitter-context";
+  #  version = "2024-10-04";
+  #  src = pkgs.fetchFromGitHub {
+  #    owner = "nvim-treesitter";
+  #    repo = "nvim-treesitter-context";
+  #    rev = "78a81c7494e7d1a08dd1200b556933e513fd9f29";
+  #    sha256 = "sha256-7NrWuN8uzS8fS9WGp3tBF6IpA7oeK64+f8+euCkPbqc=";
+  #  };
+  #  meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter-context/";
+  #})
   # nvim-treesitter-textobjects # i dont need this
 
   # Link together all treesitter grammars into single derivation

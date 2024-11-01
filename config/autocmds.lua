@@ -34,12 +34,12 @@ autocmd({ "BufWritePre" }, {
 --     end,
 -- })
 
-autocmd("QuickFixCmdPost", {
-    group = pierre_group,
-    callback = function()
-        vim.cmd([[Trouble qflist open]])
-    end,
-})
+--autocmd("QuickFixCmdPost", {
+--    group = pierre_group,
+--    callback = function()
+--        vim.cmd([[Trouble qflist open]])
+--    end,
+--})
 
 -- lsp keybinds
 autocmd("LspAttach", {
