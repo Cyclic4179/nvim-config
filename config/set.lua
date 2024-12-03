@@ -1,7 +1,5 @@
 vim.opt.guicursor = ""
 
-vim.opt.swapfile = false
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 

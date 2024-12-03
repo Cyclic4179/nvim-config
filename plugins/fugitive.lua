@@ -2,11 +2,14 @@ return {
     {
         "tpope/vim-fugitive",
         cmd = { "Git", "G" },
+        dependencies = {
+            "nvim-neotest/nvim-nio", -- used for async git
+        },
         keys = {
             { "<leader>gs", vim.cmd.Git },
         },
         config = function()
-            vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+            --vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
             local fugitive_group = vim.api.nvim_create_augroup("FugitiveGroup", {})
 
@@ -21,17 +24,25 @@ return {
                     local bufnr = vim.api.nvim_get_current_buf()
                     local opts = { buffer = bufnr, remap = false }
                     vim.keymap.set("n", "<leader>p", function()
+                        --require("nio").run(function()
                         vim.cmd([[ Git push ]])
+                        --end)
                     end, opts)
 
                     -- rebase always
                     vim.keymap.set("n", "<leader>P", function()
+                        --require("nio").run(function()
                         vim.cmd([[ Git pull --rebase ]])
+                        --end)
                     end, opts)
 
                     -- NOTE: It allows me to easily set the branch i am pushing and any tracking
                     -- needed if i did not set the branch up correctly
-                    vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts)
+                    vim.keymap.set("n", "<leader>t", function()
+                        --require("nio").run(function()
+                        vim.cmd([[ Git push -u origin ]])
+                        --end)
+                    end, opts)
                 end,
             })
 
