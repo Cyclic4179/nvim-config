@@ -40,6 +40,7 @@ return {
                 --toml = { "taplo" },
                 --css = { "prettierd", "prettier" },
                 --scss = { "prettierd", "prettier" },
+                python = { "ruff_fix", "ruff_organize_imports", "ruff_format" },
                 nix = { "nixfmt" },
                 ocaml = { "ocamlformat" },
                 c = { "clang-format" },

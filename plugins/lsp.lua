@@ -12,92 +12,46 @@ return {
             -- Set up lspconfig.
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-            -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+            -- NOTE: set capabilities for each server:
             --require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
             --    capabilities = capabilities
             --}
 
-            --require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+            -- PYTHON
 
-            -- resolved by settings PYTHONPATH (https://jdhao.github.io/2023/07/22/neovim-pylsp-setup)
-            --local venv_path = os.getenv('VIRTUAL_ENV')
-            --local py_path = nil
-            ---- decide which python executable to use for mypy
-            --if venv_path ~= nil then
-            --    py_path = venv_path .. "/bin/python3"
-            --else
-            --    py_path = vim.g.python3_host_prog
-            --end
+            lspconfig.ruff.setup({
+                capabilities = capabilities,
+                -- Server settings should go here
+                -- init_options = { settings = {} },
+            })
 
-            lspconfig.pylsp.setup({
-                settings = {
-                    pylsp = {
-                        plugins = {
-                            -- formatter options
-                            black = { enabled = true },
-                            autopep8 = { enabled = false },
-                            yapf = { enabled = false },
-                            -- linter options
-                            pylint = { enabled = true, executable = "pylint" },
-                            ruff = { enabled = false },
-                            pyflakes = { enabled = false },
-                            pycodestyle = { enabled = false },
-                            -- type checker
-                            pylsp_mypy = {
-                                enabled = true,
-                                --overrides = { "--python-executable", py_path, true },
-                                report_progress = true,
-                                live_mode = false,
-                            },
-                            -- auto-completion options
-                            jedi_completion = { fuzzy = true },
-                            -- import sorting
-                            isort = { enabled = true },
+            lspconfig.pyright.setup({
+                capabilities = capabilities,
+                -- see https://docs.astral.sh/ruff/editors/setup/#neovim
+                setting = {
+                    pyright = {
+                        -- Using Ruff's import organizer
+                        disableOrganizeImports = true,
+                    },
+                    python = {
+                        analysis = {
+                            -- Ignore all files for analysis to exclusively use Ruff for linting
+                            ignore = { "*" },
                         },
                     },
                 },
-                flags = {
-                    debounce_text_changes = 200,
-                },
-                capabilities = capabilities,
             })
 
-            --lspconfig.pylsp.setup {
-            --    capabilities = capabilities,
-            --    settings = {
-            --        pylsp = {
-            --            plugins = {
-            --                --ruff = {
-            --                --    enabled = true,
-            --                --    extendSelect = { "I" },
-            --                --    --lineLength = 160
-            --                --},
-            --                --mypy = {
-            --                --    enabled = false,
-            --                --    live_mode = true,
-            --                --    strict = true
-            --                --}
-            --            }
-            --        }
-            --    }
-            --}
-
+            -- OCAML
             lspconfig.ocamllsp.setup({ capabilities = capabilities })
 
-            --lspconfig.pyright.setup { capabilities = capabilities }
-            --lspconfig.jdtls.setup {
-            --    capabilities = capabilities,
-            --    cmd = { "jdt-language-server", "-data", home .. "/.cache/jdtls/workspace" },
-            --    root_dir = function(fname)
-            --		return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", ".git")(fname) or vim.fn.getcwd()
-            --	end,
-            --}
-            --
+            -- JAVA
             --lspconfig.java_language_server.setup {
             --    capabilities = capabilities,
             --    cmd = { 'java-language-server' }
             --}
 
+            lspconfig.julials.setup({})
             lspconfig.tsserver.setup({ capabilities = capabilities })
             lspconfig.rust_analyzer.setup({
                 capabilities = capabilities,
@@ -113,7 +67,31 @@ return {
             lspconfig.clangd.setup({ capabilities = capabilities })
             lspconfig.dockerls.setup({ capabilities = capabilities })
             lspconfig.texlab.setup({ capabilities = capabilities })
-            --lspconfig.pylsp.setup { capabilities = capabilities }
+            lspconfig.julials.setup({
+                capabilities = capabilities,
+                cmd = {
+                    vim.g.JULIA_WITH_LS_PATH,
+                    "--startup-file=no",
+                    "--history-file=no",
+                    vim.g.JULIA_LS_START_FILE,
+                },
+                -- This just adds dirname(fname) as a fallback -> linting also works in single file mode
+                -- copied from https://github.com/fredrikekre/.dotfiles/blob/4c4c6c0cbd24cb53b24de1d68377d670244b87be/.config/nvim/lua/plugins/lsp.lua#L54-L57
+                -- see https://github.com/neovim/nvim-lspconfig/blob/40f120c10ea4b87311175539a183c3b75eab95a3/lua/lspconfig/configs/julials.lua#L100-L103
+                root_dir = function(fname)
+                    local root_files = { "Project.toml", "JuliaProject.toml" }
+                    local util = require("lspconfig.util")
+                    return util.root_pattern(unpack(root_files))(fname)
+                        or vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+                        or vim.fs.dirname(fname)
+                end,
+
+                -- settings = {
+                --     julia = {
+                --         executablePath = "";
+                --     }
+                -- }
+            })
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 settings = {
@@ -122,13 +100,6 @@ return {
                             -- Tell the language server which version of Lua you're using
                             -- (most likely LuaJIT in the case of Neovim)
                             version = "LuaJIT",
-                        },
-                        diagnostics = {
-                            -- Get the language server to recognize the `vim` global
-                            globals = {
-                                "vim",
-                                "require",
-                            },
                         },
                         workspace = {
                             -- Make the server aware of Neovim runtime files
@@ -187,3 +158,81 @@ return {
         end,
     },
 }
+
+------ old python config ------
+
+--lspconfig.jdtls.setup {
+--    capabilities = capabilities,
+--    cmd = { "jdt-language-server", "-data", home .. "/.cache/jdtls/workspace" },
+--    root_dir = function(fname)
+--		return require("lspconfig").util.root_pattern("pom.xml", "gradle.build", ".git")(fname) or vim.fn.getcwd()
+--	end,
+--}
+
+-- resolved by settings PYTHONPATH (https://jdhao.github.io/2023/07/22/neovim-pylsp-setup)
+--local venv_path = os.getenv('VIRTUAL_ENV')
+--local py_path = nil
+---- decide which python executable to use for mypy
+--if venv_path ~= nil then
+--    py_path = venv_path .. "/bin/python3"
+--else
+--    py_path = vim.g.python3_host_prog
+--end
+
+-- INFO: last config
+-- lspconfig.pylsp.setup({
+--     settings = {
+--         pylsp = {
+--             plugins = {
+--                 -- formatter options
+--                 black = { enabled = true },
+--                 autopep8 = { enabled = false },
+--                 yapf = { enabled = false },
+--                 -- linter options
+--                 pylint = { enabled = true, executable = "pylint" },
+--                 ruff = { enabled = false },
+--                 pyflakes = { enabled = false },
+--                 pycodestyle = { enabled = false },
+--                 -- type checker
+--                 pylsp_mypy = {
+--                     enabled = true,
+--                     --overrides = { "--python-executable", py_path, true },
+--                     report_progress = true,
+--                     live_mode = false,
+--                 },
+--                 -- auto-completion options
+--                 jedi_completion = { fuzzy = true },
+--                 -- import sorting
+--                 isort = { enabled = true },
+--             },
+--         },
+--     },
+--     flags = {
+--         debounce_text_changes = 200,
+--     },
+--     capabilities = capabilities,
+-- })
+
+-- INFO: didnt use
+-- lspconfig.pylsp.setup {
+--     capabilities = capabilities,
+--     settings = {
+--         pylsp = {
+--             plugins = {
+--                 --ruff = {
+--                 --    enabled = true,
+--                 --    extendSelect = { "I" },
+--                 --    --lineLength = 160
+--                 --},
+--                 --mypy = {
+--                 --    enabled = false,
+--                 --    live_mode = true,
+--                 --    strict = true
+--                 --}
+--             }
+--         }
+--     }
+-- }
+
+-- also tried this
+-- lspconfig.pylsp.setup { capabilities = capabilities }
