@@ -36,6 +36,11 @@ return {
 
             "hrsh7th/cmp-cmdline",
 
+            -- latex symbols from julia
+            "kdheepak/cmp-latex-symbols",
+            -- emoji
+            "hrsh7th/cmp-emoji",
+
             -- maybe this: https://github.com/petertriho/cmp-git
         },
         config = function()
@@ -95,6 +100,15 @@ return {
                 }, {
                     { name = "path" },
                     { name = "buffer", keyword_length = 3 },
+                }, {
+                    {
+                        name = "latex_symbols",
+                        option = {
+                            strategy = 0, -- mixed
+                        },
+                    },
+                }, {
+                    { name = "emoji" },
                 }),
 
                 formatting = {
@@ -107,6 +121,7 @@ return {
                             path = "[path]",
                             luasnip = "[snip]",
                             calc = "[calc]",
+                            latex_symbols = "[sym]",
                         },
                     }),
                 },
