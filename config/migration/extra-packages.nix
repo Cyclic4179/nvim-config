@@ -29,17 +29,21 @@ with pkgs;
 
   pyright
 
-  (python3.withPackages (
-    ps:
-    with ps;
-    [
-      python-lsp-server
-      (python-lsp-black.override { pytestCheckHook = null; }) # didnt build with tests enabled :shrug:
-      pyls-isort
-      pylsp-mypy
-    ]
-    ++ python-lsp-server.optional-dependencies.all
-  ))
+  ruff
+  # (python3.withPackages (
+  #   ps:
+  #   with ps;
+  #   [
+  #     python-lsp-server
+  #     (python-lsp-black.override { pytestCheckHook = null; }) # didnt build with tests enabled :shrug:
+  #     pyls-isort
+  #     pylsp-mypy
+  #   ]
+  #   ++ python-lsp-server.optional-dependencies.all
+  # ))
+
+  # zig
+  zls
 
   # c
   clang-tools
@@ -50,6 +54,8 @@ with pkgs;
   ##llvmPackages.libcClang
   #llvmPackages.libllvm
   gdb
+
+  # (julia.withPackages [ "LanguageServer" ]) -> path issues and therefore
 
   texlab
 

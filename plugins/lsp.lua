@@ -64,6 +64,7 @@ return {
                 capabilities = capabilities,
                 autostart = true,
             })
+            lspconfig.zls.setup({ capabilities = capabilities })
             lspconfig.clangd.setup({ capabilities = capabilities })
             lspconfig.dockerls.setup({ capabilities = capabilities })
             lspconfig.texlab.setup({ capabilities = capabilities })

@@ -9,7 +9,7 @@
 [ ] lazy.init in folder so that ./lua/config/**.lua dont need to be manually copied into init.lua
 [ ] see LazyVim config for nice keybinds
 [ ] julia linter
-[ ] python fix lsp
+[x] python fix lsp
 
 
 

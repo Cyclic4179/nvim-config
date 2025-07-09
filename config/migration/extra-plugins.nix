@@ -133,6 +133,8 @@ with pkgs.vimPlugins;
   cmp-path
   cmp-cmdline
   cmp-nvim-lua
+  cmp-emoji
+  cmp-latex-symbols
   (pkgs.vimUtils.buildVimPlugin {
     pname = "cmp_luasnip_choice";
     version = "2023-03-06";
