@@ -53,13 +53,7 @@ return {
 
             lspconfig.julials.setup({})
             lspconfig.tsserver.setup({ capabilities = capabilities })
-            lspconfig.rust_analyzer.setup({
-                capabilities = capabilities,
-                -- Server-specific settings. See `:help lspconfig-setup`
-                settings = {
-                    ["rust-analyzer"] = {},
-                },
-            })
+            lspconfig.rust_analyzer.setup({ capabilities = capabilities, })
             lspconfig.nil_ls.setup({
                 capabilities = capabilities,
                 autostart = true,

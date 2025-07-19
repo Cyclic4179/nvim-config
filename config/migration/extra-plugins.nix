@@ -12,18 +12,18 @@ with pkgs.vimPlugins;
 
   # theme
   # until nixpkgs has newer rose-pine version (needed for customizing text color)
-  #rose-pine
-  (pkgs.vimUtils.buildVimPlugin {
-    pname = "rose-pine";
-    version = "2024-08-25";
-    src = pkgs.fetchFromGitHub {
-      owner = "rose-pine";
-      repo = "neovim";
-      rev = "8b1fd252255a7f2c41b4192a787ab62660b29f72";
-      sha256 = "sha256-KYlt0ryKTBV5vimnq3rxEQOhkiqLK/EV7zMxVNdSUTY=";
-    };
-    meta.homepage = "https://github.com/rose-pine/neovim/";
-  })
+  rose-pine
+  # (pkgs.vimUtils.buildVimPlugin {
+  #   pname = "rose-pine";
+  #   version = "2024-08-25";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "rose-pine";
+  #     repo = "neovim";
+  #     rev = "8b1fd252255a7f2c41b4192a787ab62660b29f72";
+  #     sha256 = "sha256-KYlt0ryKTBV5vimnq3rxEQOhkiqLK/EV7zMxVNdSUTY=";
+  #   };
+  #   meta.homepage = "https://github.com/rose-pine/neovim/";
+  # })
   tokyonight-nvim
 
   # icons -> for oil-nvim, telescope-nvim
@@ -31,17 +31,17 @@ with pkgs.vimPlugins;
 
   # trying out ...
   trouble-nvim
-  (pkgs.vimUtils.buildVimPlugin {
-    pname = "local-highlight.nvim";
-    version = "2024-04-20";
-    src = pkgs.fetchFromGitHub {
-      owner = "tzachar";
-      repo = "local-highlight.nvim";
-      rev = "ae3ada3a332128b1036c84c8587b9069891c63da";
-      sha256 = "sha256-JeTZrf1O3bAtrL857Khiqij8qSZfKp7lzAmnuxXREnE=";
-    };
-    meta.homepage = "https://github.com/tzachar/local-highlight.nvim";
-  })
+  # (pkgs.vimUtils.buildVimPlugin {
+  #   pname = "local-highlight.nvim";
+  #   version = "2024-04-20";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "tzachar";
+  #     repo = "local-highlight.nvim";
+  #     rev = "ae3ada3a332128b1036c84c8587b9069891c63da";
+  #     sha256 = "sha256-JeTZrf1O3bAtrL857Khiqij8qSZfKp7lzAmnuxXREnE=";
+  #   };
+  #   meta.homepage = "https://github.com/tzachar/local-highlight.nvim";
+  # })
 
   which-key-nvim
 
@@ -97,30 +97,8 @@ with pkgs.vimPlugins;
   oil-nvim
 
   conform-nvim
-  # doesnt exist in nixpkgs, see this pull request https://github.com/norcalli/nvim-colorizer.lua/pull/104
-  nvim-highlight-colors
-  (pkgs.vimUtils.buildVimPlugin {
-    pname = "nvim-colorizer.lua";
-    version = "2024-09-11";
-    src = pkgs.fetchFromGitHub {
-      owner = "NvChad";
-      repo = "nvim-colorizer.lua";
-      rev = "0671e0eabc6842676d3310370e8fae4e1c51d7f9";
-      sha256 = "sha256-Ffi1Q5+AI+Ysi2T56myGWmAzzyq6wW0J/Pwoc3B0ncY=";
-    };
-    meta.homepage = "https://github.com/norcalli/nvim-colorizer.lua";
-  })
-  # (pkgs.vimUtils.buildVimPlugin {
-  #   pname = "nvim-colorizer.lua";
-  #   version = "2024-07-03";
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "mertkaradayi";
-  #     repo = "nvim-colorizer.lua";
-  #     rev = "23fba8faf199244a480c9d78431e2a4a29aea880";
-  #     sha256 = "sha256-ndJy6Nqjsz+J8aACtyoF2Ks8LZe99tO00EN3mZbShx4=";
-  #   };
-  #   meta.homepage = "https://github.com/norcalli/nvim-colorizer.lua";
-  # })
+  # nvim-highlight-colors
+  nvim-colorizer-lua
 
   # harpoon
   harpoon2
@@ -145,6 +123,7 @@ with pkgs.vimPlugins;
       sha256 = "sha256-/s1p/WLfrHZHX6fU1p2PUQ0GIocAB4mvhjZ0XUMzkaw=";
     };
     meta.homepage = "https://github.com/L3MON4D3/cmp-luasnip-choice";
+    dependencies = [ nvim-cmp ];
   })
   lspkind-nvim
 
@@ -167,13 +146,4 @@ with pkgs.vimPlugins;
   nvim-nio # required for some reason
   nvim-dap-virtual-text
   nvim-dap-go
-
-  # nix file detection
-  #vim-nix # i dont use this
-
-  # personal config
-  #{
-  #  name = "config";
-  #  outPath = "${./config}";
-  #}
 ]

@@ -11,7 +11,6 @@ return {
     },
     {
         "onsails/lspkind.nvim",
-        name = "lspkind-nvim",
         lazy = true,
     },
     {
