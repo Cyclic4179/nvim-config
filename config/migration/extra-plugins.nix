@@ -157,6 +157,7 @@ with pkgs.vimPlugins;
   # snippets
   luasnip
   cmp_luasnip
+  friendly-snippets
 
   # formatting
 

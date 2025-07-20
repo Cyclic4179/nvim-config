@@ -13,7 +13,7 @@ return {
                     -- used by local-highlight.nvim
                     -- see https://coolors.co/gradient-palette/293342-1f1d2e?number=10 and https://coolors.co/393555 and https://coolors.co/1f1d2e
                     -- other color options are: #241D28, #1F1D2E, #35314F
-                    LocalHighlight = { bg = "#232737", fg = "NONE" },
+                    -- LocalHighlight = { bg = "#232737", fg = "NONE" },
 
                     DapBreakpoint = { fg = "red" },
                     DapBreakpointCondition = { fg = "yellow" },
