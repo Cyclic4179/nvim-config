@@ -1,12 +1,11 @@
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-local pierre_group = augroup("Pierre", {})
-local yank_group = augroup("HighlightYank", {})
+local my_group = augroup("MyAutoGroup", {})
 
 -- yank highlight
 autocmd("TextYankPost", {
-    group = yank_group,
+    group = my_group,
     pattern = "*",
     callback = function()
         vim.highlight.on_yank({
@@ -18,7 +17,7 @@ autocmd("TextYankPost", {
 
 -- trim spaces
 autocmd({ "BufWritePre" }, {
-    group = pierre_group,
+    group = my_group,
     pattern = "*",
     command = "%s/\\s\\+$//e",
 })
@@ -43,7 +42,7 @@ autocmd({ "BufWritePre" }, {
 
 -- lsp keybinds
 autocmd("LspAttach", {
-    group = pierre_group,
+    group = my_group,
     callback = function(e)
         local opts = { buffer = e.buf }
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
@@ -81,15 +80,15 @@ autocmd("LspAttach", {
 -- ft autocmds
 autocmd("FileType", {
     pattern = "makefile",
-    group = pierre_group,
+    group = my_group,
     callback = function()
         vim.opt_local.expandtab = false
     end,
 })
 
 autocmd("FileType", {
-    pattern = "nix",
-    group = pierre_group,
+    pattern = "nix,lua",
+    group = my_group,
     callback = function()
         vim.opt_local.tabstop = 2
         vim.opt_local.softtabstop = 2
@@ -99,7 +98,7 @@ autocmd("FileType", {
 
 autocmd("FileType", {
     pattern = "yaml",
-    group = pierre_group,
+    group = my_group,
     callback = function()
         vim.opt_local.tabstop = 4
         vim.opt_local.softtabstop = 4
@@ -110,7 +109,7 @@ autocmd("FileType", {
 
 autocmd("FileType", {
     pattern = "tex",
-    group = pierre_group,
+    group = my_group,
     callback = function()
         vim.opt_local.wrap = true
     end,
