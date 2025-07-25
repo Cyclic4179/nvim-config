@@ -1,23 +1,30 @@
-return {
-    {
-        "ThePrimeagen/harpoon",
+{ pkgs, ... }:
+{
+  binaries = [ ];
+  lazy =
+    with pkgs.vimPlugins;
+    # lua
+    ''
+      {
+        -- "ThePrimeagen/harpoon",
+        dir = "${harpoon2}",
         name = "harpoon2",
-        branch = "harpoon2",
+        -- branch = "harpoon2",
         opts = {},
-        --config = function()
-        --    local harpoon = require("harpoon")
+          --config = function()
+          --    local harpoon = require("harpoon")
 
-        --    harpoon:setup()
-        --end,
-        -- stylua: ignore
-        keys = {
+          --    harpoon:setup()
+          --end,
+          -- stylua: ignore
+          keys = {
             {
-                "<C-e>",
-                function()
-                    local harpoon = require("harpoon")
-                    harpoon.ui:toggle_quick_menu(harpoon:list())
-                end,
-                desc = "Edit require 'harpoon' list",
+              "<C-e>",
+              function()
+                  local harpoon = require("harpoon")
+                  harpoon.ui:toggle_quick_menu(harpoon:list())
+              end,
+              desc = "Edit require 'harpoon' list",
             },
             { "<leader>a",     function() require("harpoon"):list():add() end,         desc = "Add to require 'harpoon' list", },
             { "<C-h>",         function() require("harpoon"):list():select(1) end,     desc = "Select 1", },
@@ -28,6 +35,7 @@ return {
             { "<leader><C-t>", function() require("harpoon"):list():replace_at(2) end, desc = "Replace 2", },
             { "<leader><C-n>", function() require("harpoon"):list():replace_at(3) end, desc = "Replace 3", },
             { "<leader><C-s>", function() require("harpoon"):list():replace_at(4) end, desc = "Replace 4", },
-        },
-    },
+          },
+      },
+    '';
 }

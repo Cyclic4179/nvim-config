@@ -1,12 +1,20 @@
-local current_trouble_mode
-
-return {
-    {
-        "folke/trouble.nvim",
+{ pkgs, ... }:
+{
+  binaries = [ ];
+  lazy =
+    with pkgs.vimPlugins;
+    # lua
+    ''
+      {
+        -- "folke/trouble.nvim",
+        dir = "${trouble-nvim}",
+        name = "trouble.nvim",
         opts = {}, -- for default options, refer to the configuration section for custom setup.
         cmd = "Trouble",
         -- stylua: ignore
-        keys = {
+        keys = function() -- closure for current_trouble_mode
+          local current_trouble_mode
+          return {
             -- "<cmd>Trouble diagnostics toggle<cr>"
             { "<leader>tt", function()
                 require("trouble").toggle({ mode = "diagnostics" })
@@ -54,6 +62,8 @@ return {
             { "]t", function()
                 require("trouble").previous({ mode = current_trouble_mode, skip_groups = true, jump = true })
             end, desc = "Previous (Trouble)", },
-        },
-    },
+          }
+        end
+      },
+    '';
 }
